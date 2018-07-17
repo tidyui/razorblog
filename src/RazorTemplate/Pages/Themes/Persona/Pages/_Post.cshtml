@@ -1,0 +1,15 @@
+@page
+
+<div class="row justify-content-center">
+    <div class="col-sm-10">
+        <article>
+            <header>
+                <h1>@Blog.Post.Title</h1>
+                <partial name="Partial/_PostMeta" for="Blog.Post" />
+            </header>
+            <p>
+                @Html.Raw(Blog.Post.Body)
+            </p>
+        </article>
+    </div>
+</div>
