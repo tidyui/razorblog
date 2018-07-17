@@ -11,7 +11,7 @@
                     <h2><a href="/@post.Slug">@post.Title</a></h2>
                     <partial name="Partial/_PostMeta" for="@post" />
                 </header>
-                <p>@Html.Raw(post.Body)</p>
+                <p>@Html.Raw(post.Html)</p>
             </article>
         }
     </div>

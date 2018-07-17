@@ -43,7 +43,7 @@ namespace RazorTemplate
                     Category = "Ornare Cursus",
                     MetaKeywords = "Pharetra, Mattis, Sem, Venenatis",
                     MetaDescription = "Aenean eu leo quam. Pellentesque ornare sem lacinia quam venenatis vestibulum.",
-                    Body = "Cras justo odio, dapibus ac facilisis in, egestas eget quam. Vestibulum id ligula porta felis euismod semper. Donec sed odio dui. Nullam id dolor id nibh ultricies vehicula ut id elit. Donec sed odio dui.",
+                    Body = "Cras justo odio, **dapibus** ac facilisis in, egestas eget quam. Vestibulum id ligula porta felis euismod semper. Donec sed odio dui. Nullam id dolor id nibh ultricies vehicula ut id elit. Donec sed odio dui.",
                     Published = DateTime.Now
                 };
                 post.Tags.Add("Mollis Ipsum");

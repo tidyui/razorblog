@@ -10,6 +10,7 @@
 
 using System;
 using System.Collections.Generic;
+using Markdig;
 
 namespace RazorBlog.Models
 {
@@ -49,6 +50,11 @@ namespace RazorBlog.Models
         /// Gets/sets the main body.
         /// </summary>
         public string Body { get; set; }
+
+        /// <summary>
+        /// Gets the main body as HTML.
+        /// </summary>
+        public string Html => Markdown.ToHtml(Body);
 
         /// <summary>
         /// Gets/sets the published date.
