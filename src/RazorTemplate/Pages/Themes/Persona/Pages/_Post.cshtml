@@ -1,0 +1,19 @@
+@page
+
+<main role="main" class="container">
+    <article>
+        <header>
+            <div class="row justify-content-center">
+                <div class="col-sm-10">
+                    <h1>@Blog.Post.Title</h1>
+                    <partial name="Partial/_PostMeta" for="Blog.Post" />
+                </div>
+            </div>
+        </header>
+        <div class="row justify-content-center">
+            <div class="col-sm-10">
+                @Html.Raw(Blog.Post.Html)
+            </div>
+        </div>
+    </article>
+</main>

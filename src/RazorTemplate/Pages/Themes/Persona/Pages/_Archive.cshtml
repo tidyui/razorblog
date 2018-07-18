@@ -1,0 +1,31 @@
+@page
+
+<main role="main" class="container">
+    <div class="row">
+        <div class="col blog-filter-header">
+            <h1>Latest posts</h1>
+        </div>
+    </div>        
+
+    @foreach (var post in Blog.Archive.Posts) 
+    {
+        <article>
+            <header>
+                <div class="row justify-content-center">
+                    <div class="col-sm-10">
+                        <h2><a href="/@post.Slug">@post.Title</a></h2>
+                        <partial name="Partial/_PostMeta" for="@post" />
+                    </div>
+                </div>
+            </header>
+            <div class="row justify-content-center">
+                <div class="col-sm-10">
+                    <div class="ingress">
+                        @Html.Raw(post.Html)
+                    </div>
+                    <p><a class="btn btn-link" href="/@post.Slug">Read more</a></p>
+                </div>
+            </div>
+        </article>
+    }
+</main>

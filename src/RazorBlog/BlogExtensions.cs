@@ -9,9 +9,12 @@
  */
 
 using System;
+using System.IO;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.StaticFiles;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.FileProviders;
 using RazorBlog;
 using RazorBlog.Http;
 using RazorBlog.Services;
@@ -38,9 +41,15 @@ public static class BlogExtensions
     /// </summary>
     /// <param name="builder">The application builder</param>
     /// <returns>The application builder</returns>
-    public static IApplicationBuilder UseRazorBlog(this IApplicationBuilder builder)
+    public static IApplicationBuilder UseRazorBlog(this IApplicationBuilder builder, IBlogService blog)
     {
-        return builder
-            .UseMiddleware<BlogMiddleware>();
+        builder.UseMiddleware<BlogMiddleware>();
+        builder.UseStaticFiles(new StaticFileOptions
+        {
+            FileProvider = new PhysicalFileProvider(
+                Path.Combine(Directory.GetCurrentDirectory(), "Pages", "Themes", blog.Settings.Theme, "Assets")),
+            RequestPath = "/Assets"
+        });
+        return builder;
     }
 }

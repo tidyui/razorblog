@@ -30,7 +30,7 @@ namespace RazorTemplate
                 app.UseDeveloperExceptionPage();
             }
 
-            app.UseRazorBlog();
+            app.UseRazorBlog(blog);
             app.UseStaticFiles();
             app.UseMvc();
 

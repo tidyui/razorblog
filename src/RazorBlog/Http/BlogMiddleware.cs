@@ -45,7 +45,7 @@ namespace RazorBlog.Http
                 {
                     Posts = await service.GetArchive()
                 };
-                context.Request.Path = new PathString($"/Themes/{service.Settings.Theme}/_Archive");
+                context.Request.Path = new PathString($"/Themes/{service.Settings.Theme}/Pages/_Archive");
             }
             else
             {
@@ -56,7 +56,7 @@ namespace RazorBlog.Http
                 if (post != null)
                 {
                     service.Post = post;
-                    context.Request.Path = new PathString($"/Themes/{service.Settings.Theme}/_Post");
+                    context.Request.Path = new PathString($"/Themes/{service.Settings.Theme}/Pages/_Post");
                 }
             }
             await _next.Invoke(context);
