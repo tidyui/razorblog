@@ -8,13 +8,12 @@
  * 
  */
 
-using System;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using RazorBlog.Models;
 using RazorBlog.Services;
 
-namespace RazorBlog.Http
+namespace RazorBlog.AspNetCore
 {
     public class BlogMiddleware
     {

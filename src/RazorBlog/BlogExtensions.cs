@@ -11,12 +11,11 @@
 using System;
 using System.IO;
 using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.StaticFiles;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.FileProviders;
 using RazorBlog;
-using RazorBlog.Http;
+using RazorBlog.AspNetCore;
 using RazorBlog.Services;
 
 public static class BlogExtensions

@@ -18,4 +18,22 @@
     <ProjectReference Include="..\RazorBlog\RazorBlog.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Update="Pages\Themes\Persona\Assets\css\style.min.css">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Pages\Themes\Persona\Assets\img\github.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Pages\Themes\Persona\Assets\img\linkedin.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Pages\Themes\Persona\Assets\img\logo.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Pages\Themes\Persona\Assets\img\twitter.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
 </Project>
