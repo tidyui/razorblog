@@ -39,24 +39,27 @@ namespace RazorBlog.Http
             var url = context.Request.Path.HasValue ? 
                 context.Request.Path.Value.ToLower() : "";
 
-            if (string.IsNullOrEmpty(url) || url == service.Settings.BlogPrefix)
+            if (!url.StartsWith("/assets/"))
             {
-                service.Archive = new PostArchive
+                if (string.IsNullOrEmpty(url) || url == service.Settings.BlogPrefix)
                 {
-                    Posts = await service.GetArchive()
-                };
-                context.Request.Path = new PathString($"/Themes/{service.Settings.Theme}/Pages/_Archive");
-            }
-            else
-            {
-                var slug = url.Replace(service.Settings.BlogPrefix, "");
-
-                var post = await service.GetPostBySlug(slug);
-
-                if (post != null)
+                    service.Archive = new PostArchive
+                    {
+                        Posts = await service.GetArchive()
+                    };
+                    context.Request.Path = new PathString($"/Themes/{service.Settings.Theme}/Pages/_Archive");
+                }
+                else
                 {
-                    service.Post = post;
-                    context.Request.Path = new PathString($"/Themes/{service.Settings.Theme}/Pages/_Post");
+                    var slug = url.Replace(service.Settings.BlogPrefix, "");
+
+                    var post = await service.GetPostBySlug(slug);
+
+                    if (post != null)
+                    {
+                        service.Post = post;
+                        context.Request.Path = new PathString($"/Themes/{service.Settings.Theme}/Pages/_Post");
+                    }
                 }
             }
             await _next.Invoke(context);
