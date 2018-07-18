@@ -9,6 +9,7 @@
  */
 
 using System;
+using System.ComponentModel.DataAnnotations;
 
 namespace RazorBlog.Models
 {
@@ -28,11 +29,14 @@ namespace RazorBlog.Models
         /// <summary>
         /// Gets/sets the title.
         /// </summary>
+        [Required]
+        [StringLength(64)]
         public string Title { get; set; }
 
         /// <summary>
         /// Gets/sets the unique slug.
         /// </summary>
+        [StringLength(64)]
         public string Slug { get; set; }
 
         /// <summary>

@@ -10,6 +10,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using Markdig;
 
 namespace RazorBlog.Models
@@ -29,21 +30,26 @@ namespace RazorBlog.Models
         /// <summary>
         /// Gets/sets the title.
         /// </summary>
+        [Required]
+        [StringLength(128)]
         public string Title { get; set; }
 
         /// <summary>
         /// Gets/sets the unique slug.
         /// </summary>
+        [StringLength(128)]
         public string Slug { get; set; }
 
         /// <summary>
         /// Gets/sets the meta keywords.
         /// </summary>
+        [StringLength(128)]
         public string MetaKeywords { get; set; }
 
         /// <summary>
         /// Gets/sets the meta description.
         /// </summary>
+        [StringLength(256)]
         public string MetaDescription { get; set; }
 
         /// <summary>
