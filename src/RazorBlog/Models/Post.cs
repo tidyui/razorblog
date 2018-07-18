@@ -47,6 +47,16 @@ namespace RazorBlog.Models
         public string MetaDescription { get; set; }
 
         /// <summary>
+        /// Gets/sets the excerpt.
+        /// </summary>
+        public string Excerpt { get; set; }
+
+        /// <summary>
+        /// Gets the excerpt as HTML.
+        /// </summary>
+        public string ExcerptHtml => Markdown.ToHtml(Excerpt);
+
+        /// <summary>
         /// Gets/sets the main body.
         /// </summary>
         public string Body { get; set; }
@@ -54,7 +64,7 @@ namespace RazorBlog.Models
         /// <summary>
         /// Gets the main body as HTML.
         /// </summary>
-        public string Html => Markdown.ToHtml(Body);
+        public string BodyHtml => Markdown.ToHtml(Body);
 
         /// <summary>
         /// Gets/sets the published date.

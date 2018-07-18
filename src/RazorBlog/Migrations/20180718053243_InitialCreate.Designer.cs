@@ -9,7 +9,7 @@ using RazorBlog;
 namespace RazorBlog.Migrations
 {
     [DbContext(typeof(Db))]
-    [Migration("20180716211925_InitialCreate")]
+    [Migration("20180718053243_InitialCreate")]
     partial class InitialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -47,6 +47,8 @@ namespace RazorBlog.Migrations
                     b.Property<string>("Body");
 
                     b.Property<Guid?>("CategoryId");
+
+                    b.Property<string>("Excerpt");
 
                     b.Property<DateTime>("LastModified");
 

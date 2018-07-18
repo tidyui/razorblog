@@ -12,7 +12,10 @@
         </header>
         <div class="row justify-content-center">
             <div class="col-sm-10">
-                @Html.Raw(Blog.Post.Html)
+                <div class="lead">
+                    @Html.Raw(Blog.Post.ExcerptHtml)
+                </div>
+                @Html.Raw(Blog.Post.BodyHtml)
             </div>
         </div>
     </article>

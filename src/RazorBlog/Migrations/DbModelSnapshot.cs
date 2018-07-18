@@ -47,6 +47,8 @@ namespace RazorBlog.Migrations
 
                     b.Property<Guid?>("CategoryId");
 
+                    b.Property<string>("Excerpt");
+
                     b.Property<DateTime>("LastModified");
 
                     b.Property<string>("MetaDescription")
