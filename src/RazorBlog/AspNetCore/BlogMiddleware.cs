@@ -8,6 +8,7 @@
  * 
  */
 
+using System;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using RazorBlog.Models;
@@ -42,11 +43,32 @@ namespace RazorBlog.AspNetCore
             {
                 if (string.IsNullOrEmpty(url) || url == service.Settings.BlogPrefix)
                 {
-                    service.Archive = new PostArchive
+                    service.Archive = new PostList
                     {
-                        Posts = await service.GetArchive()
+                        Items = await service.GetArchive(),
+                        Page = 0
                     };
                     context.Request.Path = new PathString($"/Themes/{service.Settings.Theme}/Pages/_Archive");
+                }
+                else if (url.StartsWith("/comments/"))
+                {
+                    var segments = url.Substring(1).Split('/');
+                    var postId = Guid.Empty;
+                    var page = 0;
+
+                    if (segments.Length > 1)
+                    {
+                        postId = new Guid(segments[1]);
+
+                        if (segments.Length > 2)
+                            page = Convert.ToInt32(segments[2]);
+                        service.Comments = new CommentList
+                        {
+                            Items = await service.GetComments(postId, page),
+                            Page = page
+                        };
+                        context.Request.Path = new PathString($"/Themes/{service.Settings.Theme}/Pages/_Comments");                        
+                    }
                 }
                 else
                 {

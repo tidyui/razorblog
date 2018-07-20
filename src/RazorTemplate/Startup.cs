@@ -60,6 +60,17 @@ namespace RazorTemplate
                 post.Tags.Add("Cras Etiam");
                 post.Tags.Add("Venenatis Ipsum");
                 await blog.SavePost(post);
+
+                var comment = new Comment
+                {
+                    PostId = post.Id,
+                    AuthorEmail = "hakan@tidyui.com",
+                    AuthorName = "Håkan Edling",
+                    Body = "Maecenas sed diam eget risus varius blandit sit amet non magna. Cras justo odio, dapibus ac facilisis in, egestas eget quam.",
+                    IsApproved = true,
+                    Published = DateTime.Now
+                };
+                await blog.SaveComment(comment);
             }
         }
     }

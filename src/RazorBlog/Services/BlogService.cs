@@ -10,6 +10,8 @@
 
 using System;
 using System.Linq;
+using System.Security.Cryptography;
+using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
@@ -51,6 +53,11 @@ namespace RazorBlog.Services
         public bool HasArchive => Archive != null;
 
         /// <summary>
+        /// Gets if the service contains comment data.
+        /// </summary>
+        public bool HasComments => Comments != null;
+
+        /// <summary>
         /// Gets if the service contains post data.
         /// </summary>
         public bool HasPost => Post != null;
@@ -58,7 +65,12 @@ namespace RazorBlog.Services
         /// <summary>
         /// Gets/sets the optional archive data.
         /// </summary>
-        public PostArchive Archive { get; set; }
+        public PostList Archive { get; set; }
+
+        /// <summary>
+        /// Gets/sets the optional comment data.
+        /// </summary>
+        public CommentList Comments { get; set; }
 
         /// <summary>
         /// Gets/sets the optional post data.
@@ -66,25 +78,18 @@ namespace RazorBlog.Services
         public Post Post { get; set; }
 
         /// <summary>
-        /// Gets the post with the specified id.
-        /// </summary>
-        /// <param name="id">The unique id</param>
-        /// <returns>The post</returns>
-        public virtual Task<Post> GetPostById(Guid id) 
-        {
-            return GetQuery()
-                .FirstOrDefaultAsync(p => p.Id == id);
-        }
-
-        /// <summary>
         /// Gets the post with the specified slug.
         /// </summary>
         /// <param name="slug">The unique slug</param>
         /// <returns>The post</returns>
-        public virtual Task<Post> GetPostBySlug(string slug)
+        public virtual async Task<Post> GetPostBySlug(string slug)
         {
-            return GetQuery()
+            var post = await GetQuery()
                 .FirstOrDefaultAsync(p => p.Slug == slug);
+
+            if (post != null)
+                post.CommentCount = await _db.Comments.CountAsync(c => c.PostId == post.Id && c.IsApproved);
+            return post;
         }
 
         /// <summary>
@@ -125,6 +130,7 @@ namespace RazorBlog.Services
 
             foreach (var post in posts)
             {
+                post.CommentCount = await _db.Comments.CountAsync(c => c.PostId == post.Id && c.IsApproved);
                 post.Tags = post.Tags.OrderBy(t => t.Title).ToList();
             }
             return posts;
@@ -196,6 +202,57 @@ namespace RazorBlog.Services
         }
 
         /// <summary>
+        /// Gets the comments for the post with the specified id.
+        /// </summary>
+        /// <param name="postId">The post id</param>
+        /// <param name="page">The current page of the comments</param>
+        /// <returns>The available comments</returns>
+        public Task<Comment[]> GetComments(Guid postId, int page = 0)
+        {
+            return _db.Comments
+                .Where(c => c.PostId == postId && c.IsApproved)
+                .OrderByDescending(c => c.Published)
+                .Skip(page * Settings.PageSize)
+                .Take(Settings.PageSize)
+                .ToArrayAsync();
+        }
+
+        /// <summary>
+        /// Saves the given comment.
+        /// </summary>
+        /// <param name="model">The comment to save</param>
+        /// <returns>The id of the comment</returns>
+        public async Task<Guid> SaveComment(Comment model)
+        {
+            if (model.Id == Guid.Empty)
+                model.Id = Guid.NewGuid();
+
+            if (string.IsNullOrEmpty(model.AuthorName) || model.AuthorName.Length > 128)
+                throw new ArgumentException("Author name is required and has a max length of 128 characters.");
+            if (string.IsNullOrEmpty(model.AuthorEmail) || model.AuthorEmail.Length > 128)
+                throw new ArgumentException("Author email is required and has a max length of 128 characters.");
+
+            var comment = await _db.Comments
+                .FirstOrDefaultAsync(c => c.Id == model.Id);
+
+            if (comment == null)
+            {
+                comment = new Comment
+                {
+                    Id = model.Id,
+                    PostId = model.PostId
+                };
+                await _db.Comments.AddAsync(comment);
+            }
+
+            _mapper.Map<Comment, Comment>(model, comment);
+
+            await _db.SaveChangesAsync();
+
+            return comment.Id;
+        }
+
+        /// <summary>
         /// Generates a new slug from the given string.
         /// </summary>
         /// <param name="str">The string</param>
@@ -239,6 +296,24 @@ namespace RazorBlog.Services
             return slug;
         }
 
+        public string GetGravatar(string email, int size = 60)
+        {
+            using (var md5 = MD5.Create())
+            {
+                byte[] inputBytes = Encoding.UTF8.GetBytes(email.Trim().ToLower());
+                byte[] hashBytes = md5.ComputeHash(inputBytes);
+
+                // Convert the byte array to hexadecimal string
+                var sb = new StringBuilder();
+                for (int i = 0; i < hashBytes.Length; i++)
+                {
+                    sb.Append(hashBytes[i].ToString("X2"));
+                }
+
+                return $"https://www.gravatar.com/avatar/{sb.ToString().ToLower()}?s={size}&d=blank";
+            }
+        }
+
         /// <summary>
         /// Gets the post base query.
         /// </summary>
@@ -267,6 +342,8 @@ namespace RazorBlog.Services
                 {
                     var config = new MapperConfiguration(cfg =>
                     {
+                        cfg.CreateMap<Models.Comment, Models.Comment>()
+                            .ForMember(c => c.Post, o => o.Ignore());
                         cfg.CreateMap<Models.Post, Models.Post>()
                             .ForMember(p => p.Id, o => o.Ignore())
                             .ForMember(p => p.Category, o => o.Ignore())

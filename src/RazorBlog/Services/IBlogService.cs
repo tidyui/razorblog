@@ -27,6 +27,11 @@ namespace RazorBlog.Services
         bool HasArchive { get; }
 
         /// <summary>
+        /// Gets if the service contains comment data.
+        /// </summary>
+        bool HasComments { get; }
+
+        /// <summary>
         /// Gets if the service contains post data.
         /// </summary>
         bool HasPost { get; }
@@ -34,19 +39,17 @@ namespace RazorBlog.Services
         /// <summary>
         /// Gets/sets the optional archive data.
         /// </summary>
-        PostArchive Archive { get; set; }
+        PostList Archive { get; set; }
+
+        /// <summary>
+        /// Gets/sets the optional comment data.
+        /// </summary>
+        CommentList Comments { get; set; }
 
         /// <summary>
         /// Gets/sets the optional post data.
         /// </summary>
         Post Post { get; set; }
-
-        /// <summary>
-        /// Gets the post with the specified id.
-        /// </summary>
-        /// <param name="id">The unique id</param>
-        /// <returns>The post</returns>
-        Task<Post> GetPostById(Guid id);
 
         /// <summary>
         /// Gets the post with the specified slug.
@@ -74,10 +77,27 @@ namespace RazorBlog.Services
         Task<Guid> SavePost(Post model);
 
         /// <summary>
+        /// Gets the comments for the post with the specified id.
+        /// </summary>
+        /// <param name="postId">The post id</param>
+        /// <param name="page">The current page of the comments</param>
+        /// <returns>The available comments</returns>
+        Task<Comment[]> GetComments(Guid postId, int page = 0);
+
+        /// <summary>
+        /// Saves the given comment.
+        /// </summary>
+        /// <param name="model">The comment to save</param>
+        /// <returns>The id of the comment</returns>
+        Task<Guid> SaveComment(Comment model);
+
+        /// <summary>
         /// Generates a new slug from the given string.
         /// </summary>
         /// <param name="str">The string</param>
         /// <returns>The slug</returns>
         string GenerateSlug(string str);
+
+        string GetGravatar(string email, int size = 60);   
     }
 }

@@ -10,12 +10,12 @@
 
 namespace RazorBlog.Models
 {
-    public sealed class PostArchive
+    public sealed class PostList
     {
         /// <summary>
         /// Gets/sets the available posts.
         /// </summary>
-        public Post[] Posts { get; set; }
+        public Post[] Items { get; set; }
 
         /// <summary>
         /// Gets/sets the optional selected category.
@@ -36,5 +36,10 @@ namespace RazorBlog.Models
         /// Gets/sets the optional selected month.
         /// </summary>
         public int? Month { get; set; }
+
+        /// <summary>
+        /// Gets/sets the current page.
+        /// </summary>
+        public int Page { get; set; }
     }
 }

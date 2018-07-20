@@ -7,7 +7,7 @@
         </div>
     </div>        
 
-    @foreach (var post in Blog.Archive.Posts) 
+    @foreach (var post in Blog.Archive.Items) 
     {
         <article>
             <header>
@@ -21,7 +21,7 @@
             <div class="row justify-content-center">
                 <div class="col-sm-10">
                     <div class="ingress">
-                        @Html.Raw(post.ExcerptHtml)
+                        @post.Excerpt.ToHtml()
                     </div>
                     <p><a class="btn btn-link" href="/@post.Slug">Read more</a></p>
                 </div>

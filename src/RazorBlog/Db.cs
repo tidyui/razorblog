@@ -25,6 +25,11 @@ namespace RazorBlog
         public DbSet<Category> Categories { get; set; }
 
         /// <summary>
+        /// Gets/sets the comment set.
+        /// </summary>
+        public DbSet<Comment> Comments { get; set; }
+
+        /// <summary>
         /// Gets/sets the post set.
         /// </summary>
         public DbSet<Post> Posts { get; set; }
@@ -66,12 +71,19 @@ namespace RazorBlog
             mb.Entity<Category>().Property(c => c.Slug).HasMaxLength(64).IsRequired();
             mb.Entity<Category>().HasIndex(c => c.Slug).IsUnique();
 
+            mb.Entity<Comment>().ToTable("RazorBlog_Comments");
+            mb.Entity<Comment>().Property(c => c.AuthorName).HasMaxLength(128).IsRequired();
+            mb.Entity<Comment>().Property(c => c.AuthorEmail).HasMaxLength(128).IsRequired();
+
             mb.Entity<Post>().ToTable("RazorBlog_Posts");
             mb.Entity<Post>().Property(p => p.Title).HasMaxLength(128).IsRequired();
             mb.Entity<Post>().Property(p => p.Slug).HasMaxLength(128).IsRequired();
             mb.Entity<Post>().Property(p => p.MetaKeywords).HasMaxLength(128);
             mb.Entity<Post>().Property(p => p.MetaDescription).HasMaxLength(256);
+            mb.Entity<Post>().OwnsOne(p => p.Excerpt, md => md.Property(m => m.Value).HasColumnName("Excerpt"));
+            mb.Entity<Post>().OwnsOne(p => p.Body, md => md.Property(m => m.Value).HasColumnName("Body"));
             mb.Entity<Post>().HasIndex(p => p.Slug).IsUnique();
+            mb.Entity<Post>().Ignore(p => p.CommentCount);
 
             mb.Entity<Tag>().ToTable("RazorBlog_Tags");
             mb.Entity<Tag>().Property(t => t.Title).HasMaxLength(64).IsRequired();

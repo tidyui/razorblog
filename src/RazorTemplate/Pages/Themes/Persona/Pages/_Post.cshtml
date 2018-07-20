@@ -1,4 +1,12 @@
 @page
+@section script
+{
+    <script>
+        $.get('/comments/@Blog.Post.Id', function (data) {
+            $('#comments').html(data);
+        });
+    </script>
+}
 
 <main role="main" class="container">
     <article>
@@ -13,10 +21,28 @@
         <div class="row justify-content-center">
             <div class="col-sm-10">
                 <div class="lead">
-                    @Html.Raw(Blog.Post.ExcerptHtml)
+                    @Blog.Post.Excerpt.ToHtml()
                 </div>
-                @Html.Raw(Blog.Post.BodyHtml)
+                @Blog.Post.Body.ToHtml()
             </div>
         </div>
     </article>
+
+    @if (Blog.Post.CommentCount > 0)
+    {
+        <div class="row justify-content-center">
+            <div class="col-sm-10 comment-title">
+                @if (Blog.Post.CommentCount == 1)
+                {
+                    <h4>1 comment</h4>
+                }
+                else
+                {
+                    <h4>@Blog.Post.CommentCount comments</h4>
+                }
+            </div>
+        </div>
+        <div id="comments">
+        </div>
+    }
 </main>

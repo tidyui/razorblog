@@ -55,22 +55,17 @@ namespace RazorBlog.Models
         /// <summary>
         /// Gets/sets the excerpt.
         /// </summary>
-        public string Excerpt { get; set; }
-
-        /// <summary>
-        /// Gets the excerpt as HTML.
-        /// </summary>
-        public string ExcerptHtml => Markdown.ToHtml(Excerpt);
+        public MarkdownString Excerpt { get; set; }
 
         /// <summary>
         /// Gets/sets the main body.
         /// </summary>
-        public string Body { get; set; }
+        public MarkdownString Body { get; set; }
 
         /// <summary>
-        /// Gets the main body as HTML.
+        /// Gets the number of available comments.
         /// </summary>
-        public string BodyHtml => Markdown.ToHtml(Body);
+        public int CommentCount { get; internal set; }
 
         /// <summary>
         /// Gets/sets the published date.
@@ -88,6 +83,11 @@ namespace RazorBlog.Models
         public Category Category { get; set; }
 
         /// <summary>
+        /// Gets/sets the available comments.
+        /// </summary>
+        public IList<Comment> Comments { get; set; }
+
+        /// <summary>
         /// Gets/sets the available tags.
         /// </summary>
         /// <value></value>
@@ -98,6 +98,7 @@ namespace RazorBlog.Models
         /// </summary>
         public Post()
         {
+            Comments = new List<Comment>();
             Tags = new List<Tag>();
         }
     }
