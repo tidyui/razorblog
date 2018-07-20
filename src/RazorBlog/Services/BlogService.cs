@@ -101,17 +101,38 @@ namespace RazorBlog.Services
         /// <param name="year">The optional year</param>
         /// <param name="month">The optional month</param>
         /// <returns>The archive</returns>
-        public virtual async Task<Post[]> GetArchive(int page = 0, string category = null, string tag = null, int? year = null, int? month = null)
+        public virtual async Task<PostList> GetArchive(int page = 1, string category = null, string tag = null, int? year = null, int? month = null)
         {
+            var model = new PostList();
             var query = GetQuery();
 
+            // Filter on category
             if (!string.IsNullOrEmpty(category))
-                query = query.Where(p => p.Category.Slug == category);
-            if (!string.IsNullOrEmpty(tag))
-                query = query.Where(p => p.Tags.Any(t => t.Slug == tag));
-            
-            if (year.HasValue)
             {
+                model.Category = await _db.Categories
+                    .FirstOrDefaultAsync(c => c.Slug == category);
+
+                if (model.Category != null)
+                    query = query.Where(p => p.CategoryId == model.Category.Id);
+            }
+
+            // Filter on tag
+            if (!string.IsNullOrEmpty(tag))
+            {
+                model.Tag = await _db.Tags
+                    .FirstOrDefaultAsync(t => t.Slug == tag);
+
+                if (model.Tag != null)
+                    query = query.Where(p => p.Tags.Any(t => t.Slug == tag));
+            }
+            
+            // Filter on period
+            var now = DateTime.Now;
+            if (year.HasValue && year.Value <= now.Year)
+            {
+                model.Year = year;
+                model.Month = month;
+
                 var from = new DateTime(year.Value, month.HasValue ? month.Value : 1, 1);
                 var to = month.HasValue ? from.AddMonths(1) : from.AddYears(1);
 
@@ -122,18 +143,28 @@ namespace RazorBlog.Services
                 query = query.Where(p => p.Published <= DateTime.Now);
             }
 
-            var posts = await query
+            // Get total posts matching the query
+            var count = await query.CountAsync();
+
+            // Set page count and validate requested page
+            model.PageCount = Math.Max(Convert.ToInt32(Math.Ceiling((double)count / Settings.PageSize)), 1);
+
+            if (page > model.PageCount)
+                page = model.PageCount;
+            model.Page = page;
+
+            model.Items = await query
                 .OrderByDescending(p => p.Published)
-                .Skip(page * Settings.PageSize)
+                .Skip((page - 1) * Settings.PageSize)
                 .Take(Settings.PageSize)
                 .ToArrayAsync();
 
-            foreach (var post in posts)
+            foreach (var post in model.Items)
             {
                 post.CommentCount = await _db.Comments.CountAsync(c => c.PostId == post.Id && c.IsApproved);
                 post.Tags = post.Tags.OrderBy(t => t.Title).ToList();
             }
-            return posts;
+            return model;
         }
 
         /// <summary>
@@ -165,7 +196,10 @@ namespace RazorBlog.Services
 
             if (model.Category != null)
             {
-                if (!_db.Categories.Any(c => c.Id == model.Category.Id))
+                if (string.IsNullOrEmpty(model.Category.Slug))
+                    model.Category.Slug = GenerateSlug(model.Category.Title);
+
+                if (!_db.Categories.Any(c => c.Slug == model.Category.Slug))
                 {
                     post.CategoryId = model.Category.Id = Guid.NewGuid();
                     model.Category.Slug = GenerateSlug(model.Category.Title);
@@ -296,6 +330,12 @@ namespace RazorBlog.Services
             return slug;
         }
 
+        /// <summary>
+        /// Gets the gravatar URL for the given email.
+        /// </summary>
+        /// <param name="email">The email</param>
+        /// <param name="size">The requested image size</param>
+        /// <returns>The gravatar url</returns>
         public string GetGravatar(string email, int size = 60)
         {
             using (var md5 = MD5.Create())

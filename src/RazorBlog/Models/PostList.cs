@@ -41,5 +41,10 @@ namespace RazorBlog.Models
         /// Gets/sets the current page.
         /// </summary>
         public int Page { get; set; }
+
+        /// <summary>
+        /// Gets/set the total page count.
+        /// </summary>
+        public int PageCount { get; set; }
     }
 }

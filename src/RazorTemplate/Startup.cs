@@ -31,7 +31,7 @@ namespace RazorTemplate
             app.UseMvc();
 
             // Seed
-            if ((await blog.GetArchive()).Length == 0)
+            if ((await blog.GetArchive()).Items.Length == 0)
             {
                 var post = new Post
                 {

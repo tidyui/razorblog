@@ -43,11 +43,7 @@ namespace RazorBlog.AspNetCore
             {
                 if (string.IsNullOrEmpty(url) || url == service.Settings.BlogPrefix)
                 {
-                    service.Archive = new PostList
-                    {
-                        Items = await service.GetArchive(),
-                        Page = 0
-                    };
+                    service.Archive = await service.GetArchive();
                     context.Request.Path = new PathString($"/Themes/{service.Settings.Theme}/Pages/_Archive");
                 }
                 else if (url.StartsWith("/comments/"))

@@ -67,7 +67,7 @@ namespace RazorBlog.Services
         /// <param name="year">The optional year</param>
         /// <param name="month">The optional month</param>
         /// <returns>The archive</returns>
-        Task<Post[]> GetArchive(int page = 0, string category = null, string tag = null, int? year = null, int? month = null);
+        Task<PostList> GetArchive(int page = 1, string category = null, string tag = null, int? year = null, int? month = null);
 
         /// <summary>
         /// Saves the given post.
@@ -98,6 +98,12 @@ namespace RazorBlog.Services
         /// <returns>The slug</returns>
         string GenerateSlug(string str);
 
+        /// <summary>
+        /// Gets the gravatar URL for the given email.
+        /// </summary>
+        /// <param name="email">The email</param>
+        /// <param name="size">The requested image size</param>
+        /// <returns>The gravatar url</returns>
         string GetGravatar(string email, int size = 60);   
     }
 }
