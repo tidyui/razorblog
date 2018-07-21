@@ -154,15 +154,22 @@ namespace RazorBlog.Services
             model.Page = page;
 
             // Setup pagination
-            if (model.Page > 1)
+            if (model.PageCount > 1)
             {
-                model.Pagination.HasPrev = true;
-                model.Pagination.PrevLink = $"{Settings.ArchiveSlug}/page/{Math.Max(model.Page - 1, 1)}";
-            }
-            if (model.Page < model.PageCount)
-            {
-                model.Pagination.HasNext = true;
-                model.Pagination.NextLink = $"{Settings.ArchiveSlug}/page/{Math.Min(model.Page + 1, model.PageCount)}";
+                var baseUrl = Settings.ArchiveSlug +
+                    (model.Category != null ? $"/category/{model.Category.Slug}" : "") +
+                    (model.Tag != null ? $"/tag/{model.Tag.Slug}" : "");
+
+                if (model.Page > 1)
+                {
+                    model.Pagination.HasPrev = true;
+                    model.Pagination.PrevLink = $"{baseUrl}/page/{Math.Max(model.Page - 1, 1)}";
+                }
+                if (model.Page < model.PageCount)
+                {
+                    model.Pagination.HasNext = true;
+                    model.Pagination.NextLink = $"{baseUrl}/page/{Math.Min(model.Page + 1, model.PageCount)}";
+                }
             }
 
             model.Items = await query
@@ -212,12 +219,19 @@ namespace RazorBlog.Services
                 if (string.IsNullOrEmpty(model.Category.Slug))
                     model.Category.Slug = GenerateSlug(model.Category.Title);
 
-                if (!_db.Categories.Any(c => c.Slug == model.Category.Slug))
+                var category = await _db.Categories
+                    .FirstOrDefaultAsync(c => c.Slug == model.Category.Slug);
+
+                if (category == null)
                 {
                     post.CategoryId = model.Category.Id = Guid.NewGuid();
                     model.Category.Slug = GenerateSlug(model.Category.Title);
                     
                     await _db.Categories.AddAsync(model.Category);
+                }
+                else
+                {
+                    post.CategoryId = category.Id;
                 }
             }
 

@@ -46,6 +46,87 @@ namespace RazorBlog.AspNetCore
                     service.Archive = await service.GetArchive();
                     context.Request.Path = new PathString($"/Themes/{service.Settings.Theme}/Pages/_Archive");
                 }
+                else if (url.StartsWith(service.Settings.ArchiveSlug))
+                {
+                    var segments = url.Substring(1).Split('/');
+
+                    if (segments.Length > 1)
+                    {
+                        int page = 1;
+                        int? year = null;
+                        int? month = null;
+                        string category = null;
+                        string tag = null;
+                        bool foundCategory = false;
+                        bool foundTag = false;
+                        bool foundPage = false;
+
+                        for (var n = 1; n < segments.Length; n++)
+                        {
+                            if (segments[n] == "category" && !foundPage)
+                            {
+                                foundCategory = true;
+                                continue;
+                            }
+
+                            if (segments[n] == "tag" && !foundPage)
+                            {
+                                foundTag = true;
+                                continue;
+                            }
+
+                            if (segments[n] == "page")
+                            {
+                                foundPage = true;
+                                continue;
+                            }
+
+                            if (foundCategory)
+                            {
+                                category = segments[n];
+                                foundCategory = false;
+                            }
+
+                            if (foundTag)
+                            {
+                                tag = segments[n];
+                                foundTag = false;
+                            }
+
+                            if (foundPage)
+                            {
+                                try
+                                {
+                                    page = Convert.ToInt32(segments[n]);
+                                }
+                                catch { }
+                                break;
+                            }
+
+                            if (!year.HasValue)
+                            {
+                                try
+                                {
+                                    year = Convert.ToInt32(segments[n]);
+
+                                    if (year.Value > DateTime.Now.Year)
+                                        year = DateTime.Now.Year;
+                                }
+                                catch { }
+                            }
+                            else
+                            {
+                                try
+                                {
+                                    month = Math.Max(Math.Min(Convert.ToInt32(segments[n]), 12), 1);
+                                }
+                                catch { }
+                            }
+                        }
+                        service.Archive = await service.GetArchive(page, category, tag, year, month);
+                        context.Request.Path = new PathString($"/Themes/{service.Settings.Theme}/Pages/_Archive");
+                    }
+                }
                 else if (url.StartsWith("/comments/"))
                 {
                     var segments = url.Substring(1).Split('/');

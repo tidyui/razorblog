@@ -20,7 +20,7 @@ namespace RazorBlog
         /// <summary>
         /// Gets/sets the URL slug for the blog archive.
         /// </summary>
-        public string ArchiveSlug { get; set; } = "/archive";
+        public string ArchiveSlug { get; set; } = "/blog";
 
         /// <summary>
         /// Gets/sets the page size for the post listing.

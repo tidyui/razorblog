@@ -1,9 +1,42 @@
 @page
+@using System.Globalization
+@{
+    Func<int, int?, string> MonthName = (year, month) => {
+        if (month.HasValue) {
+            return new DateTime(year, month.Value, 1) .ToString("MMMM", CultureInfo.InvariantCulture);
+        }
+        return "";
+    };    
+}
 
 <main role="main" class="container archive">
     <div class="row">
         <div class="col blog-filter-header">
-            <h1>Latest posts</h1>
+            @if (Blog.Archive.Category != null) {
+                <div class="row">
+                    <div class="col blog-filter-header">
+                        <h1>Category: @Blog.Archive.Category.Title</h1>
+                    </div>
+                </div>
+            } else if (Blog.Archive.Tag != null) {
+                <div class="row">
+                    <div class="col blog-filter-header">
+                        <h1>Tag: @Blog.Archive.Tag.Title</h1>
+                    </div>
+                </div>
+            } else if (Blog.Archive.Year.HasValue) {
+                <div class="row">
+                    <div class="col blog-filter-header">
+                        <h1>Posts from @MonthName(Blog.Archive.Year.Value, Blog.Archive.Month) @Blog.Archive.Year</h1>
+                    </div>
+                </div>        
+            } else {
+                <div class="row">
+                    <div class="col blog-filter-header">
+                        <h1>Latest posts</h1>
+                    </div>
+                </div>        
+            }
         </div>
     </div>        
 
