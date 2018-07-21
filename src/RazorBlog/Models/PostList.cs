@@ -12,6 +12,29 @@ namespace RazorBlog.Models
 {
     public sealed class PostList
     {
+        public sealed class ListPagination
+        {
+            /// <summary>
+            /// Gets/sets if the archive has a prev link.
+            /// </summary>
+            public bool HasPrev { get; set; }
+
+            /// <summary>
+            /// Gets/sets if the archive has a next link.
+            /// </summary>
+            public bool HasNext { get; set; }
+
+            /// <summary>
+            /// Gets/sets the prev link.
+            /// </summary>
+            public string PrevLink { get; set; }
+
+            /// <summary>
+            /// Gets/sets the next link.
+            /// </summary>
+            public string NextLink { get; set; }
+        }
+
         /// <summary>
         /// Gets/sets the available posts.
         /// </summary>
@@ -46,5 +69,10 @@ namespace RazorBlog.Models
         /// Gets/set the total page count.
         /// </summary>
         public int PageCount { get; set; }
+
+        /// <summary>
+        /// Gets/sets the current pagination.
+        /// </summary>
+        public ListPagination Pagination { get; set; } = new ListPagination();
     }
 }

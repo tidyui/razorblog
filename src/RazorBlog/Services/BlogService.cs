@@ -153,12 +153,25 @@ namespace RazorBlog.Services
                 page = model.PageCount;
             model.Page = page;
 
+            // Setup pagination
+            if (model.Page > 1)
+            {
+                model.Pagination.HasPrev = true;
+                model.Pagination.PrevLink = $"{Settings.ArchiveSlug}/page/{Math.Max(model.Page - 1, 1)}";
+            }
+            if (model.Page < model.PageCount)
+            {
+                model.Pagination.HasNext = true;
+                model.Pagination.NextLink = $"{Settings.ArchiveSlug}/page/{Math.Min(model.Page + 1, model.PageCount)}";
+            }
+
             model.Items = await query
                 .OrderByDescending(p => p.Published)
                 .Skip((page - 1) * Settings.PageSize)
                 .Take(Settings.PageSize)
                 .ToArrayAsync();
 
+            // Get comment count and order tags
             foreach (var post in model.Items)
             {
                 post.CommentCount = await _db.Comments.CountAsync(c => c.PostId == post.Id && c.IsApproved);
