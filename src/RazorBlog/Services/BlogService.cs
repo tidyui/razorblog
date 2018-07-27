@@ -88,7 +88,13 @@ namespace RazorBlog.Services
                 .FirstOrDefaultAsync(p => p.Slug == slug);
 
             if (post != null)
+            {
                 post.CommentCount = await _db.Comments.CountAsync(c => c.PostId == post.Id && c.IsApproved);
+                post.LastModified = post.LastModified.ToLocalTime();
+
+                if (post.Published.HasValue)
+                    post.Published = post.Published.Value.ToLocalTime();
+            }
             return post;
         }
 
@@ -140,7 +146,7 @@ namespace RazorBlog.Services
             }
             else
             {
-                query = query.Where(p => p.Published <= DateTime.Now);
+                query = query.Where(p => p.Published <= DateTime.Now.ToUniversalTime());
             }
 
             // Get total posts matching the query
@@ -183,6 +189,8 @@ namespace RazorBlog.Services
             {
                 post.CommentCount = await _db.Comments.CountAsync(c => c.PostId == post.Id && c.IsApproved);
                 post.Tags = post.Tags.OrderBy(t => t.Title).ToList();
+                post.LastModified = post.LastModified.ToLocalTime();
+                post.Published = post.Published.Value.ToLocalTime();
             }
             return model;
         }
@@ -255,7 +263,9 @@ namespace RazorBlog.Services
                     post.Tags.Add(tag);
                 }
             }
-            post.LastModified = DateTime.Now;
+            post.LastModified = DateTime.Now.ToUniversalTime();
+            if (post.Published.HasValue)
+                post.Published = post.Published.Value.ToUniversalTime();
 
             await _db.SaveChangesAsync();
 
@@ -268,14 +278,18 @@ namespace RazorBlog.Services
         /// <param name="postId">The post id</param>
         /// <param name="page">The current page of the comments</param>
         /// <returns>The available comments</returns>
-        public Task<Comment[]> GetComments(Guid postId, int page = 0)
+        public async Task<Comment[]> GetComments(Guid postId, int page = 0)
         {
-            return _db.Comments
+            var comments = await _db.Comments
                 .Where(c => c.PostId == postId && c.IsApproved)
                 .OrderByDescending(c => c.Published)
                 .Skip(page * Settings.PageSize)
                 .Take(Settings.PageSize)
                 .ToArrayAsync();
+
+            foreach (var comment in comments)
+                comment.Published = comment.Published.ToLocalTime();
+            return comments;
         }
 
         /// <summary>
@@ -301,12 +315,13 @@ namespace RazorBlog.Services
                 comment = new Comment
                 {
                     Id = model.Id,
-                    PostId = model.PostId
+                    PostId = model.PostId,
+                    Published = DateTime.Now
                 };
                 await _db.Comments.AddAsync(comment);
             }
-
             _mapper.Map<Comment, Comment>(model, comment);
+            comment.Published = comment.Published.ToUniversalTime();
 
             await _db.SaveChangesAsync();
 
