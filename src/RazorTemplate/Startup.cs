@@ -1,6 +1,7 @@
 ﻿using System;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using RazorBlog.Models;
@@ -15,7 +16,7 @@ namespace RazorTemplate
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddRazorBlog(options => options.UseSqlite("Filename=./razorblog.db"));
-            services.AddMvc();
+            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -26,9 +27,10 @@ namespace RazorTemplate
                 app.UseDeveloperExceptionPage();
             }
 
-            app.UseRazorBlog(blog);
-            app.UseStaticFiles();
-            app.UseMvc();
+            app.UseRazorBlog(blog)
+                .WithDependencies()
+                .WithFileCache(7)
+                .Run();
 
             // Seed
             if ((await blog.GetArchive()).Items.Length == 0)

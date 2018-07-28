@@ -9,11 +9,9 @@
  */
 
 using System;
-using System.IO;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.FileProviders;
 using RazorBlog;
 using RazorBlog.AspNetCore;
 using RazorBlog.Services;
@@ -39,16 +37,10 @@ public static class BlogExtensions
     /// Adds the RazorBlog to the application pipeline.
     /// </summary>
     /// <param name="builder">The application builder</param>
+    /// <param name="blog">The blog service</param>
     /// <returns>The application builder</returns>
-    public static IApplicationBuilder UseRazorBlog(this IApplicationBuilder builder, IBlogService blog)
+    public static BlogApplication UseRazorBlog(this IApplicationBuilder builder, IBlogService blog)
     {
-        builder.UseMiddleware<BlogMiddleware>();
-        builder.UseStaticFiles(new StaticFileOptions
-        {
-            FileProvider = new PhysicalFileProvider(
-                Path.Combine(Directory.GetCurrentDirectory(), "Pages", "Themes", blog.Settings.Theme, "Assets")),
-            RequestPath = "/Assets"
-        });
-        return builder;
+        return new BlogApplication(builder, blog);
     }
 }
