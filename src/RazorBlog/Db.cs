@@ -17,7 +17,7 @@ namespace RazorBlog
     public sealed class Db : DbContext
     {
         private static bool _isInitialized;
-        private static object _mutext = new Object();
+        private static object _mutex = new Object();
 
         /// <summary>
         /// Gets/sets the category set.
@@ -47,7 +47,7 @@ namespace RazorBlog
         {
             if (!_isInitialized)
             {
-                lock (_mutext)
+                lock (_mutex)
                 {
                     if (!_isInitialized)
                     {
