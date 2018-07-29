@@ -60,7 +60,7 @@ namespace RazorBlog.AspNetCore
         /// <returns>The blog application</returns>
         public BlogApplication WithFileCache(int days)
         {
-            _fileCache = 60 * 60 * days;
+            _fileCache = 60 * 60 * 24 * days;
 
             return this;
         }
