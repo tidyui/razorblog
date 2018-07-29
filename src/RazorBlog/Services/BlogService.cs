@@ -85,11 +85,25 @@ namespace RazorBlog.Services
         public virtual async Task<Post> GetPostBySlug(string slug)
         {
             var post = await GetQuery()
-                .FirstOrDefaultAsync(p => p.Slug == slug);
+                .Where(p => p.Slug == slug)
+                .Select(p => new Post {
+                    Id = p.Id,
+                    CategoryId = p.CategoryId,
+                    Title = p.Title,
+                    Slug = p.Slug,
+                    MetaKeywords = p.MetaKeywords,
+                    MetaDescription = p.MetaDescription,
+                    Excerpt = p.Excerpt,
+                    Body = p.Body,
+                    CommentCount = p.Comments.Count(),
+                    Published = p.Published,
+                    LastModified = p.LastModified,
+                    Category = p.Category,
+                    Tags = p.Tags.OrderBy(t => t.Title).ToList()
+                }).FirstOrDefaultAsync();
 
             if (post != null)
             {
-                post.CommentCount = await _db.Comments.CountAsync(c => c.PostId == post.Id && c.IsApproved);
                 post.LastModified = post.LastModified.ToLocalTime();
 
                 if (post.Published.HasValue)
@@ -182,13 +196,25 @@ namespace RazorBlog.Services
                 .OrderByDescending(p => p.Published)
                 .Skip((page - 1) * Settings.PageSize)
                 .Take(Settings.PageSize)
-                .ToArrayAsync();
+                .Select(p => new Post {
+                    Id = p.Id,
+                    CategoryId = p.CategoryId,
+                    Title = p.Title,
+                    Slug = p.Slug,
+                    MetaKeywords = p.MetaKeywords,
+                    MetaDescription = p.MetaDescription,
+                    Excerpt = p.Excerpt,
+                    Body = p.Body,
+                    CommentCount = p.Comments.Count(),
+                    Published = p.Published,
+                    LastModified = p.LastModified,
+                    Category = p.Category,
+                    Tags = p.Tags.OrderBy(t => t.Title).ToList()
+                }).ToArrayAsync();
 
             // Get comment count and order tags
             foreach (var post in model.Items)
             {
-                post.CommentCount = await _db.Comments.CountAsync(c => c.PostId == post.Id && c.IsApproved);
-                post.Tags = post.Tags.OrderBy(t => t.Title).ToList();
                 post.LastModified = post.LastModified.ToLocalTime();
                 post.Published = post.Published.Value.ToLocalTime();
             }
