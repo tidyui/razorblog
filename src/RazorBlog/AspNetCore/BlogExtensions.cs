@@ -24,13 +24,10 @@ public static class BlogExtensions
     /// <param name="services">The service collection</param>
     /// <param name="options">The db options</param>
     /// <returns>The updated service collection</returns>
-    public static IServiceCollection AddRazorBlog(this IServiceCollection services,
+    public static BlogApplicationService AddRazorBlog(this IServiceCollection services,
         Action<DbContextOptionsBuilder> options)
     {
-        services.AddDbContext<Db>(options);
-        services.AddScoped<IBlogService, BlogService>();
-
-        return services;
+        return new BlogApplicationService(services, options);
     }
 
     /// <summary>
