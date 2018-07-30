@@ -161,7 +161,7 @@ namespace RazorBlog.AspNetCore
             {
                 var slug = url.Replace(service.Settings.BlogPrefix, "");
 
-                var post = await service.GetPostBySlug(slug);
+                var post = await service.GetPost(slug);
 
                 if (post != null)
                 {

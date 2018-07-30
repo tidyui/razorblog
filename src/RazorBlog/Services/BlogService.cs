@@ -82,7 +82,7 @@ namespace RazorBlog.Services
         /// </summary>
         /// <param name="slug">The unique slug</param>
         /// <returns>The post</returns>
-        public virtual async Task<Post> GetPostBySlug(string slug)
+        public virtual async Task<Post> GetPost(string slug)
         {
             var post = await GetQuery()
                 .Where(p => p.Slug == slug)

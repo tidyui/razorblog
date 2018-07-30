@@ -56,7 +56,7 @@ namespace RazorBlog.Services
         /// </summary>
         /// <param name="slug">The unique slug</param>
         /// <returns>The post</returns>
-        Task<Post> GetPostBySlug(string slug);
+        Task<Post> GetPost(string slug);
 
         /// <summary>
         /// Gets the post archive.
