@@ -70,6 +70,7 @@ namespace RazorBlog.AspNetCore
         /// </summary>
         public void Run()
         {
+            Builder.UseMiddleware<SitemapMiddleware>();
             Builder.UseMiddleware<BlogMiddleware>();
             Builder.UseStaticFiles(new StaticFileOptions
             {
