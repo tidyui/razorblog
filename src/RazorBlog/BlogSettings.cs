@@ -15,12 +15,12 @@ namespace RazorBlog
         /// <summary>
         /// Gets/sets the main blog title.
         /// </summary>
-        public string Title { get; set; } = "My RazorBlog";
+        public string Title { get; set; } = "RazorBlog";
 
         /// <summary>
         /// Gets/sets the main blog description.
         /// </summary>
-        public string Description { get; set; } = "Just a short description";
+        public string Description { get; set; } = "Minimal & Fast Blogging for ASP.NET Core";
 
         /// <summary>
         /// Gets/sets the URL prefix for the entire blog.
