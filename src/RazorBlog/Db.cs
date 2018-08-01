@@ -80,6 +80,8 @@ namespace RazorBlog
             mb.Entity<Post>().Property(p => p.Slug).HasMaxLength(128).IsRequired();
             mb.Entity<Post>().Property(p => p.MetaKeywords).HasMaxLength(128);
             mb.Entity<Post>().Property(p => p.MetaDescription).HasMaxLength(256);
+            mb.Entity<Post>().OwnsOne(p => p.Author, md => md.Property(m => m.Name).HasColumnName("AuthorName"));
+            mb.Entity<Post>().OwnsOne(p => p.Author, md => md.Property(m => m.Email).HasColumnName("AuthorEmail"));
             mb.Entity<Post>().OwnsOne(p => p.Excerpt, md => md.Property(m => m.Value).HasColumnName("Excerpt"));
             mb.Entity<Post>().OwnsOne(p => p.Body, md => md.Property(m => m.Value).HasColumnName("Body"));
             mb.Entity<Post>().HasIndex(p => p.Slug).IsUnique();

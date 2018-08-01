@@ -95,6 +95,11 @@ namespace RazorBlog.Services
                     MetaDescription = p.MetaDescription,
                     Excerpt = p.Excerpt,
                     Body = p.Body,
+                    Author = new Author
+                    {
+                        Name = p.Author.Name,
+                        Email = p.Author.Email
+                    },
                     CommentCount = p.Comments.Count(),
                     Published = p.Published,
                     LastModified = p.LastModified,
@@ -205,6 +210,11 @@ namespace RazorBlog.Services
                     MetaDescription = p.MetaDescription,
                     Excerpt = p.Excerpt,
                     Body = p.Body,
+                    Author = new Author
+                    {
+                        Name = p.Author.Name,
+                        Email = p.Author.Email
+                    },
                     CommentCount = p.Comments.Count(),
                     Published = p.Published,
                     LastModified = p.LastModified,

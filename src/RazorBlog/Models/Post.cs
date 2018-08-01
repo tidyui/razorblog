@@ -78,6 +78,11 @@ namespace RazorBlog.Models
         public DateTime LastModified { get; set; }
 
         /// <summary>
+        /// Gets/sets the author information.
+        /// </summary>
+        public Author Author { get; set; }
+
+        /// <summary>
         /// Gets/sets the optional category.
         /// </summary>
         public Category Category { get; set; }
@@ -98,6 +103,7 @@ namespace RazorBlog.Models
         /// </summary>
         public Post()
         {
+            Author = new Author();
             Comments = new List<Comment>();
             Tags = new List<Tag>();
         }

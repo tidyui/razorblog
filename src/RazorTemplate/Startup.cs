@@ -43,6 +43,11 @@ namespace RazorTemplate
                     MetaDescription = "Aenean eu leo quam. Pellentesque ornare sem lacinia quam venenatis vestibulum.",
                     Excerpt = "Donec ullamcorper nulla non metus auctor fringilla. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus.",
                     Body = "Cras justo odio, **dapibus** ac facilisis in, egestas eget quam. Vestibulum id ligula porta felis euismod semper. Donec sed odio dui. Nullam id dolor id nibh ultricies vehicula ut id elit. Donec sed odio dui.\n\nCum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Vivamus sagittis lacus vel augue laoreet rutrum faucibus dolor auctor. Donec sed odio dui. Cras justo odio, dapibus ac facilisis in, egestas eget quam. Sed posuere consectetur est at lobortis. Donec sed odio dui. Morbi leo risus, porta ac consectetur ac, vestibulum at eros.",
+                    Author = new Author 
+                    {
+                        Name = "Håkan Edling",
+                        Email = "hakan@tidyui.com"
+                    },
                     Published = DateTime.Now
                 };
                 post.Tags.Add("Mollis Ipsum");
@@ -57,6 +62,11 @@ namespace RazorTemplate
                     MetaDescription = "Nulla vitae elit libero, a pharetra augue.",
                     Excerpt = "Maecenas sed diam eget risus varius blandit sit amet non magna. Sed posuere consectetur est at lobortis. Donec id elit non mi porta gravida at eget metus.",
                     Body = "Vivamus sagittis lacus vel augue laoreet rutrum faucibus dolor auctor. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Integer posuere erat a ante venenatis dapibus posuere velit aliquet. Donec ullamcorper nulla non metus auctor fringilla. Cras mattis consectetur purus sit amet fermentum. Maecenas sed diam eget risus varius blandit sit amet non magna.",
+                    Author = new Author 
+                    {
+                        Name = "Håkan Edling",
+                        Email = "hakan@tidyui.com"
+                    },
                     Published = DateTime.Now
                 };
                 post.Tags.Add("Cras Etiam");
