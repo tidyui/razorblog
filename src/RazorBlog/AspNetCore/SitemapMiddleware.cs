@@ -44,7 +44,7 @@ namespace RazorBlog.AspNetCore
 
             if (url == "/sitemap.xml")
             {
-                string host = context.Request.Scheme + "://" + context.Request.Host;
+                var host = context.Request.Scheme + "://" + context.Request.Host;
 
                 using (var xml = XmlWriter.Create(context.Response.Body, new XmlWriterSettings { Indent = true }))
                 {

@@ -13,6 +13,16 @@ namespace RazorBlog
     public class BlogSettings
     {
         /// <summary>
+        /// Gets/sets the main blog title.
+        /// </summary>
+        public string Title { get; set; } = "My RazorBlog";
+
+        /// <summary>
+        /// Gets/sets the main blog description.
+        /// </summary>
+        public string Description { get; set; } = "Just a short description";
+
+        /// <summary>
         /// Gets/sets the URL prefix for the entire blog.
         /// </summary>
         public string BlogPrefix { get; set; } = "/";
