@@ -1,0 +1,13 @@
+{
+  "name": "razorblog",
+  "version": "0.1.0",
+  "description": "Core package for RazorBlog",
+  "main": "index.js",
+  "author": "Håkan Edling",
+  "license": "MIT",
+  "devDependencies": {
+    "gulp": "^3.9.1",
+    "gulp-rename": "^1.2.2",
+    "gulp-uglify": "3.0.0"
+  }
+}

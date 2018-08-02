@@ -77,7 +77,20 @@ namespace RazorBlog.AspNetCore
             {
                 FileProvider = new PhysicalFileProvider(
                     Path.Combine(Directory.GetCurrentDirectory(), "Pages", "Themes", Blog.Settings.Theme, "Assets")),
-                RequestPath = "/Assets",
+                RequestPath = "/assets",
+                OnPrepareResponse = ctx =>
+                {
+                    if (_fileCache > 0)
+                    {
+                        ctx.Context.Response.Headers[HeaderNames.CacheControl] =
+                            "public,max-age=" + _fileCache;
+                    }
+                }
+            });
+            Builder.UseStaticFiles(new StaticFileOptions
+            {
+                FileProvider = new EmbeddedFileProvider(typeof(BlogExtensions).Assembly, "RazorBlog.Assets.Js"),
+                RequestPath = "/razorblog/js",
                 OnPrepareResponse = ctx =>
                 {
                     if (_fileCache > 0)

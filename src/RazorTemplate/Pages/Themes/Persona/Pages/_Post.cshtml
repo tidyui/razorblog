@@ -3,13 +3,13 @@
 {
     <script>
         function postInit() {
-            getComments('@Blog.Post.Id');
+            razorblog.comments.load('@Blog.Post.Id', 'comments');
         }
     </script>
-    <script async src="~/assets/js/comments.js" onload="postInit()"></script>
+    <script async src="~/razorblog/js/comments.min.js" onload="postInit()"></script>
 }
 
-<main role="main" class="container">
+<main class="container">
     <article>
         <header>
             <div class="row justify-content-center">

@@ -12,10 +12,15 @@
     <PackageReference Include="Markdig" Version="0.15.1" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc" Version="2.1.1" />
     <PackageReference Include="Microsoft.AspNetCore.StaticFiles" Version="2.1.1" />
+    <PackageReference Include="Microsoft.Extensions.FileProviders.Embedded" Version="2.1.1" />
     <PackageReference Include="Microsoft.Extensions.FileProviders.Physical" Version="2.1.1" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="2.1.1" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="2.1.1" />
     <PackageReference Include="Microsoft.SyndicationFeed.ReaderWriter" Version="1.0.2" />
   </ItemGroup>
   
+  <ItemGroup>
+    <EmbeddedResource Include="Assets\Js\*.min.js" />
+  </ItemGroup>
+
 </Project>
