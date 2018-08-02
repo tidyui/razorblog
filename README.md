@@ -15,7 +15,7 @@ It is built using the following awesome packages:
 
 * **Posts** with **Categories** and **Tags**
 * **Author** information
-* User **Comments**
+* User **Comments** with async loading
 * Paged **Archives** with Category and Tag filtering
 
 ## Technical Features
