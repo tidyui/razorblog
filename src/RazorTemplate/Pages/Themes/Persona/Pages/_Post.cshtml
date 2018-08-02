@@ -2,10 +2,11 @@
 @section script
 {
     <script>
-        $.get('/comments/@Blog.Post.Id', function (data) {
-            $('#comments').html(data);
-        });
+        function postInit() {
+            getComments('@Blog.Post.Id');
+        }
     </script>
+    <script async src="~/assets/js/comments.js" onload="postInit()"></script>
 }
 
 <main role="main" class="container">
