@@ -3,7 +3,7 @@
 ## About
 
 RazorBlog is a **minimal**, **super fast** blog engine for ASP.Net Core Razor Pages `2.1.1`.
-It is build using the following awesome packages:
+It is built using the following awesome packages:
 
 * AutoMapper `7.0.1`
 * Markdig `0.15.1`
@@ -13,18 +13,16 @@ It is build using the following awesome packages:
 
 ## Content Features
 
-* Posts with Categories and Tags
-* Author information
-* User Comments
-* Paged Archive
-* Paged Category Archives
-* Paged Tag Archives
+* **Posts** with **Categories** and **Tags**
+* **Author** information
+* User **Comments**
+* Paged **Archives** with Category and Tag filtering
 
 ## Technical Features
 
-* Theme support
-* RSS and ATOM feeds
-* Sitemap generation
+* **Theme** support
+* **RSS** and **ATOM** feeds
+* **Sitemap** generation
 * Supports all databases supported by `EF Core`
 
 ## Planned Features
