@@ -23,6 +23,19 @@ namespace RazorBlog
         public static class Delegates
         {
             public delegate void XmlGenerateDelegate(XmlWriter writer);
+
+            public delegate void ModelSaveDelegate<T>(T model);
+        }
+
+        /// <summary>
+        /// The hooks available for comments.
+        /// </summary>
+        public static class Comment
+        {
+            /// <summary>
+            /// Called before a new comment is saved to the database.
+            /// </summary>
+            public static Delegates.ModelSaveDelegate<Models.Comment> OnSave;
         }
 
         /// <summary>

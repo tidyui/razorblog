@@ -100,7 +100,7 @@ namespace RazorBlog.Services
                         Name = p.Author.Name,
                         Email = p.Author.Email
                     },
-                    CommentCount = p.Comments.Count(),
+                    CommentCount = p.Comments.Count(c => c.IsApproved),
                     Published = p.Published,
                     LastModified = p.LastModified,
                     Category = p.Category,
@@ -215,7 +215,7 @@ namespace RazorBlog.Services
                         Name = p.Author.Name,
                         Email = p.Author.Email
                     },
-                    CommentCount = p.Comments.Count(),
+                    CommentCount = p.Comments.Count(c => c.IsApproved),
                     Published = p.Published,
                     LastModified = p.LastModified,
                     Category = p.Category,
@@ -358,6 +358,9 @@ namespace RazorBlog.Services
             }
             _mapper.Map<Comment, Comment>(model, comment);
             comment.Published = comment.Published.ToUniversalTime();
+
+            // Execute hook, if available
+            Hooks.Comment.OnSave?.Invoke(comment);
 
             await _db.SaveChangesAsync();
 
