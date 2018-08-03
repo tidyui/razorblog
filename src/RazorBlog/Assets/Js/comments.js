@@ -15,6 +15,35 @@ razorblog.comments = new function() {
 
     var self = this;
 
+    // Adds a new comment
+    self.add = function (comment, onSuccess, onError) {
+        // Validate input
+        if (comment.PostId == '' || comment.Body == '' || comment.AuthorName == '' || comment.AuthorEmail == '') {
+            if (onError != null)
+                onError();
+        }
+
+        // Create xml request
+        var xmlhttp = new XMLHttpRequest();
+        xmlhttp.onreadystatechange = function() {
+            if (xmlhttp.readyState == XMLHttpRequest.DONE) {
+                if (xmlhttp.status == 200) {
+                    if (onSuccess != null)
+                        onSuccess();
+                } else {
+                    if (onError != null)
+                        onError();
+                }
+            }
+        };
+        
+        // Call api
+        xmlhttp.open('POST', '/razorblog/api/comment', true);
+        xmlhttp.setRequestHeader('Content-Type', 'application/json');
+        xmlhttp.send(JSON.stringify(comment));
+    };
+
+    // Loads comments for a post into the given dom element.
     self.load = function (postId, domId) {
         var xmlhttp = new XMLHttpRequest();
 
@@ -23,10 +52,26 @@ razorblog.comments = new function() {
                if (xmlhttp.status == 200) {
                    document.getElementById(domId).innerHTML = xmlhttp.responseText;
                }
-             }
+            }
         };
     
         xmlhttp.open('GET', '/comments/' + postId, true);
+        xmlhttp.send();    
+    };
+
+    // Loads the specified page of comments for a post into the given dom element.    
+    self.loadPage = function (postId, domId, page) {
+        var xmlhttp = new XMLHttpRequest();
+
+        xmlhttp.onreadystatechange = function() {
+            if (xmlhttp.readyState == XMLHttpRequest.DONE) {
+               if (xmlhttp.status == 200) {
+                   document.getElementById(domId).innerHTML = xmlhttp.responseText;
+               }
+            }
+        };
+    
+        xmlhttp.open('GET', '/comments/' + postId + '/' + page, true);
         xmlhttp.send();    
     };
 };
