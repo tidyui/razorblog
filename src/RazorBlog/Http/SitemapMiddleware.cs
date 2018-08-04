@@ -17,7 +17,7 @@ using Microsoft.EntityFrameworkCore;
 using RazorBlog.Models;
 using RazorBlog.Services;
 
-namespace RazorBlog.AspNetCore
+namespace RazorBlog.Http
 {
     public class SitemapMiddleware
     {

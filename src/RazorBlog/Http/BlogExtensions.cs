@@ -13,7 +13,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using RazorBlog;
-using RazorBlog.AspNetCore;
+using RazorBlog.Http;
 using RazorBlog.Services;
 
 public static class BlogExtensions

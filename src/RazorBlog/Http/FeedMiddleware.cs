@@ -20,7 +20,7 @@ using Microsoft.SyndicationFeed.Rss;
 using RazorBlog.Models;
 using RazorBlog.Services;
 
-namespace RazorBlog.AspNetCore
+namespace RazorBlog.Http
 {
     public class FeedMiddleware
     {

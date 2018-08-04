@@ -15,7 +15,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using RazorBlog.Services;
 
-namespace RazorBlog.AspNetCore
+namespace RazorBlog.Http
 {
     public class BlogApplicationService
     {

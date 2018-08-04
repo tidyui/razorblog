@@ -14,7 +14,7 @@ using Microsoft.Extensions.FileProviders;
 using Microsoft.Net.Http.Headers;
 using RazorBlog.Services;
 
-namespace RazorBlog.AspNetCore
+namespace RazorBlog.Http
 {
     public class BlogApplication
     {

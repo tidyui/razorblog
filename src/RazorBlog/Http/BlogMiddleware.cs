@@ -14,7 +14,7 @@ using Microsoft.AspNetCore.Http;
 using RazorBlog.Models;
 using RazorBlog.Services;
 
-namespace RazorBlog.AspNetCore
+namespace RazorBlog.Http
 {
     public class BlogMiddleware
     {
