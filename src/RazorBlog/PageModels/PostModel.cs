@@ -51,8 +51,6 @@ namespace RazorBlog.PageModels
             {
                 return Page();
             }
-            Comment.IsApproved = true;
-
             await _blog.SaveComment(Comment);
 
             return LocalRedirect($"~{_blog.Settings.BlogPrefix}{_blog.Post.Slug}");

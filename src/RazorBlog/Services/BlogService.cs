@@ -348,11 +348,13 @@ namespace RazorBlog.Services
 
             if (comment == null)
             {
+                model.IsApproved = true;
+                model.Published = DateTime.Now;
+
                 comment = new Comment
                 {
                     Id = model.Id,
-                    PostId = model.PostId,
-                    Published = DateTime.Now
+                    PostId = model.PostId
                 };
                 await _db.Comments.AddAsync(comment);
             }
