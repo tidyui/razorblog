@@ -74,4 +74,39 @@ razorblog.comments = new function() {
         xmlhttp.open('GET', '/comments/' + postId + '/' + page, true);
         xmlhttp.send();    
     };
+
+    self.validate = function ()
+    {
+        var isValid = true;
+
+        var body = document.getElementById('Body');
+        if (body.value == '') {
+            isValid = false;
+            body.classList.add('error');
+        } else {
+            body.classList.remove('error');
+        }
+
+        var author = document.getElementById('AuthorName');
+        if (author.value == '') {
+            isValid = false;
+            author.classList.add('error');
+        } else {
+            author.classList.remove('error');
+        }
+
+        var email = document.getElementById('AuthorEmail');
+        if (email.value == '') {
+            isValid = false;
+            email.classList.add('error');
+        } else {
+            email.classList.remove('error');
+        }
+
+        if (!isValid) {
+            return false;
+        } else {
+            return true;
+        }
+    };
 };
