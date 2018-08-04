@@ -1,4 +1,6 @@
 @page
+@model RazorBlog.PageModels.PostModel
+
 @section script
 {
     <script>
@@ -15,7 +17,7 @@
             <div class="row justify-content-center">
                 <div class="col-sm-10">
                     <h1>@Blog.Post.Title</h1>
-                    <partial name="Partial/_PostMeta" for="Blog.Post" />
+                    <partial name="Partial/_PostMeta" for="@Blog.Post" />
                 </div>
             </div>
         </header>
@@ -46,8 +48,8 @@
     }
     <div id="comments">
     </div>
-    <form id="comment-form">
-        <input type="hidden" name="PostId" id="PostId" value="@Blog.Post.Id">
+    <form id="comment-form" method="post">
+        <input type="hidden" name="Comment.PostId" value="@Blog.Post.Id">
         <div class="row justify-content-center">
             <div class="col-sm-10 comment-title">
                 <h4>Leave a reply</h4>
@@ -56,19 +58,19 @@
         <div class="row justify-content-center">
             <div class="col-sm-10">
                 <div class="form-group">
-                    <textarea name="Body" id="Body" rows="8" class="form-control"></textarea>
+                    <textarea name="Comment.Body" rows="8" class="form-control"></textarea>
                 </div>
             </div>
         </div>
         <div class="row justify-content-center">
             <div class="col-sm-5">
                 <div class="form-group">
-                    <input name="AuthorName" id="AuthorName" type="text" class="form-control" placeholder="Name">
+                    <input name="Comment.AuthorName" type="text" class="form-control" placeholder="Name">
                 </div>
             </div>
             <div class="col-sm-5">
                 <div class="form-group">
-                    <input name="AuthorEmail" id="AuthorEmail" type="text" class="form-control" placeholder="Email">
+                    <input name="Comment.AuthorEmail" type="text" class="form-control" placeholder="Email">
                 </div>
             </div>
         </div>
