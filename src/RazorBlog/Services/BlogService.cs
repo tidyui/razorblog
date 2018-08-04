@@ -15,6 +15,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Caching.Memory;
 using AutoMapper;
 using RazorBlog.Models;
 
@@ -23,6 +24,7 @@ namespace RazorBlog.Services
     public class BlogService : IBlogService
     {
         protected readonly Db _db;
+        protected readonly IMemoryCache _memCache;
         protected static IMapper _mapper;
         protected static object _mutex = new Object();
         protected static bool _isInitialized = false;
@@ -32,9 +34,10 @@ namespace RazorBlog.Services
         /// Default constructor.
         /// </summary>
         /// <param name="db">The current db context</param>
-        public BlogService(Db db)
+        public BlogService(Db db, IMemoryCache memCache = null)
         {
             _db = db;
+            _memCache = memCache;
 
             if (!_isInitialized)
             {
@@ -84,35 +87,42 @@ namespace RazorBlog.Services
         /// <returns>The post</returns>
         public virtual async Task<Post> GetPost(string slug)
         {
-            var post = await GetQuery()
-                .Where(p => p.Slug == slug)
-                .Select(p => new Post {
-                    Id = p.Id,
-                    CategoryId = p.CategoryId,
-                    Title = p.Title,
-                    Slug = p.Slug,
-                    MetaKeywords = p.MetaKeywords,
-                    MetaDescription = p.MetaDescription,
-                    Excerpt = p.Excerpt,
-                    Body = p.Body,
-                    Author = new Author
-                    {
-                        Name = p.Author.Name,
-                        Email = p.Author.Email
-                    },
-                    CommentCount = p.Comments.Count(c => c.IsApproved),
-                    Published = p.Published,
-                    LastModified = p.LastModified,
-                    Category = p.Category,
-                    Tags = p.Tags.OrderBy(t => t.Title).ToList()
-                }).FirstOrDefaultAsync();
+            var post = _memCache?.Get<Post>(slug);
 
-            if (post != null)
+            if (post == null)
             {
-                post.LastModified = post.LastModified.ToLocalTime();
+                post = await GetQuery()
+                    .Where(p => p.Slug == slug)
+                    .Select(p => new Post {
+                        Id = p.Id,
+                        CategoryId = p.CategoryId,
+                        Title = p.Title,
+                        Slug = p.Slug,
+                        MetaKeywords = p.MetaKeywords,
+                        MetaDescription = p.MetaDescription,
+                        Excerpt = p.Excerpt,
+                        Body = p.Body,
+                        Author = new Author
+                        {
+                            Name = p.Author.Name,
+                            Email = p.Author.Email
+                        },
+                        CommentCount = p.Comments.Count(c => c.IsApproved),
+                        Published = p.Published,
+                        LastModified = p.LastModified,
+                        Category = p.Category,
+                        Tags = p.Tags.OrderBy(t => t.Title).ToList()
+                    }).FirstOrDefaultAsync();
 
-                if (post.Published.HasValue)
-                    post.Published = post.Published.Value.ToLocalTime();
+                if (post != null)
+                {
+                    post.LastModified = post.LastModified.ToLocalTime();
+
+                    if (post.Published.HasValue)
+                        post.Published = post.Published.Value.ToLocalTime();
+                    
+                    _memCache?.Set(slug, post);
+                }
             }
             return post;
         }
@@ -304,6 +314,8 @@ namespace RazorBlog.Services
                 post.Published = post.Published.Value.ToUniversalTime();
 
             await _db.SaveChangesAsync();
+
+            _memCache?.Remove(post.Slug);
 
             return model.Id;
         }
