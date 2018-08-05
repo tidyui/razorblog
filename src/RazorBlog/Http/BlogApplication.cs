@@ -85,6 +85,7 @@ namespace RazorBlog.Http
                         ctx.Context.Response.Headers[HeaderNames.CacheControl] =
                             "public,max-age=" + _fileCache;
                     }
+                    ctx.Context.Response.Headers.Add("Arr-Disable-Session-Affinity", "true");
                 }
             });
             Builder.UseStaticFiles(new StaticFileOptions
@@ -98,6 +99,7 @@ namespace RazorBlog.Http
                         ctx.Context.Response.Headers[HeaderNames.CacheControl] =
                             "public,max-age=" + _fileCache;
                     }
+                    ctx.Context.Response.Headers.Add("Arr-Disable-Session-Affinity", "true");
                 }
             });
 
