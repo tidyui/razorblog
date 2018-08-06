@@ -14,7 +14,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using RazorBlog.Services;
 
-namespace RazorBlog.PageModels
+namespace RazorBlog.Models
 {
     /// <summary>
     /// Page model for a single post.
