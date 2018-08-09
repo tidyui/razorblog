@@ -34,7 +34,9 @@ namespace RazorBlog.Http
             Services = services;
 
             Services.AddDbContext<Db>(options);
-            Services.AddScoped<IBlogService, BlogService>();
+            Services.AddScoped<IApi, Api>();
+            Services.AddScoped<IBlog, Blog>();
+            Services.AddScoped<ISettings, Settings>();
         }
 
         /// <summary>

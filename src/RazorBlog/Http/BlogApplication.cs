@@ -29,14 +29,14 @@ namespace RazorBlog.Http
         /// <summary>
         /// Gets the blog service.
         /// </summary>
-        public readonly IBlogService Blog;
+        public readonly IBlog Blog;
 
         /// <summary>
         /// Default internal constructor.
         /// </summary>
         /// <param name="builder">The current application builder</param>
         /// <param name="blog">The blog service</param>
-        internal BlogApplication(IApplicationBuilder builder, IBlogService blog)
+        internal BlogApplication(IApplicationBuilder builder, IBlog blog)
         {
             Builder = builder;
             Blog = blog;

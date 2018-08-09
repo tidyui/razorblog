@@ -10,7 +10,6 @@
 
 using System;
 using System.Linq;
-using System.Security.Cryptography;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
@@ -21,22 +20,23 @@ using RazorBlog.Models;
 
 namespace RazorBlog.Services
 {
-    public class BlogService : IBlogService
+    public class Api : IApi
     {
         protected readonly Db _db;
+        protected readonly ISettings _settings;
         protected readonly IMemoryCache _memCache;
         protected static IMapper _mapper;
         protected static object _mutex = new Object();
         protected static bool _isInitialized = false;
-        protected static BlogSettings _settings = new BlogSettings();
 
         /// <summary>
         /// Default constructor.
         /// </summary>
         /// <param name="db">The current db context</param>
-        public BlogService(Db db, IMemoryCache memCache = null)
+        public Api(Db db, ISettings settings, IMemoryCache memCache = null)
         {
             _db = db;
+            _settings = settings;
             _memCache = memCache;
 
             if (!_isInitialized)
@@ -44,41 +44,6 @@ namespace RazorBlog.Services
                 Init();
             }
         }
-
-        /// <summary>
-        /// Gets the current blog settings.
-        /// </summary>
-        public BlogSettings Settings => _settings;
-
-        /// <summary>
-        /// Gets if the service contains archive data.
-        /// </summary>
-        public bool HasArchive => Archive != null;
-
-        /// <summary>
-        /// Gets if the service contains comment data.
-        /// </summary>
-        public bool HasComments => Comments != null;
-
-        /// <summary>
-        /// Gets if the service contains post data.
-        /// </summary>
-        public bool HasPost => Post != null;
-
-        /// <summary>
-        /// Gets/sets the optional archive data.
-        /// </summary>
-        public PostList Archive { get; set; }
-
-        /// <summary>
-        /// Gets/sets the optional comment data.
-        /// </summary>
-        public CommentList Comments { get; set; }
-
-        /// <summary>
-        /// Gets/sets the optional post data.
-        /// </summary>
-        public Post Post { get; set; }
 
         /// <summary>
         /// Gets the post with the specified slug.
@@ -182,7 +147,7 @@ namespace RazorBlog.Services
             var count = await query.CountAsync();
 
             // Set page count and validate requested page
-            model.PageCount = Math.Max(Convert.ToInt32(Math.Ceiling((double)count / Settings.PageSize)), 1);
+            model.PageCount = Math.Max(Convert.ToInt32(Math.Ceiling((double)count / _settings.PageSize)), 1);
 
             if (page > model.PageCount)
                 page = model.PageCount;
@@ -191,7 +156,7 @@ namespace RazorBlog.Services
             // Setup pagination
             if (model.PageCount > 1)
             {
-                var baseUrl = Settings.ArchiveSlug +
+                var baseUrl = _settings.ArchiveSlug +
                     (model.Category != null ? $"/category/{model.Category.Slug}" : "") +
                     (model.Tag != null ? $"/tag/{model.Tag.Slug}" : "");
 
@@ -209,8 +174,8 @@ namespace RazorBlog.Services
 
             model.Items = await query
                 .OrderByDescending(p => p.Published)
-                .Skip((page - 1) * Settings.PageSize)
-                .Take(Settings.PageSize)
+                .Skip((page - 1) * _settings.PageSize)
+                .Take(_settings.PageSize)
                 .Select(p => new Post {
                     Id = p.Id,
                     CategoryId = p.CategoryId,
@@ -331,8 +296,8 @@ namespace RazorBlog.Services
             var comments = await _db.Comments
                 .Where(c => c.PostId == postId && c.IsApproved)
                 .OrderByDescending(c => c.Published)
-                .Skip(page * Settings.PageSize)
-                .Take(Settings.PageSize)
+                .Skip(page * _settings.PageSize)
+                .Take(_settings.PageSize)
                 .ToArrayAsync();
 
             foreach (var comment in comments)
@@ -423,30 +388,6 @@ namespace RazorBlog.Services
             if (slug.StartsWith("-"))
                 slug = slug.Substring(Math.Min(slug.IndexOf("-") + 1, slug.Length));
             return slug;
-        }
-
-        /// <summary>
-        /// Gets the gravatar URL for the given email.
-        /// </summary>
-        /// <param name="email">The email</param>
-        /// <param name="size">The requested image size</param>
-        /// <returns>The gravatar url</returns>
-        public string GetGravatar(string email, int size = 60)
-        {
-            using (var md5 = MD5.Create())
-            {
-                byte[] inputBytes = Encoding.UTF8.GetBytes(email.Trim().ToLower());
-                byte[] hashBytes = md5.ComputeHash(inputBytes);
-
-                // Convert the byte array to hexadecimal string
-                var sb = new StringBuilder();
-                for (int i = 0; i < hashBytes.Length; i++)
-                {
-                    sb.Append(hashBytes[i].ToString("X2"));
-                }
-
-                return $"https://www.gravatar.com/avatar/{sb.ToString().ToLower()}?s={size}&d=blank";
-            }
         }
 
         /// <summary>

@@ -40,7 +40,7 @@ namespace RazorBlog.Http
         /// </summary>
         /// <param name="context">The current HTTP context</param>
         /// <param name="blog">The blog service</param>
-        public virtual async Task Invoke(HttpContext context, IBlogService blog, Db db)
+        public virtual async Task Invoke(HttpContext context, IBlog blog, Db db)
         {
             var url = context.Request.Path.HasValue ? 
                 context.Request.Path.Value.ToLower() : "";
@@ -108,7 +108,7 @@ namespace RazorBlog.Http
         /// <param name="url">The currently requested url</param>
         /// <param name="host">The host name</param>
         /// <returns>The feed writer</returns>
-        private async Task<ISyndicationFeedWriter> GetWriter(XmlWriter writer, IBlogService blog, string url, string host, DateTime? latest)
+        private async Task<ISyndicationFeedWriter> GetWriter(XmlWriter writer, IBlog blog, string url, string host, DateTime? latest)
         {
             var segments = url.Substring(1).Split('/');
 

@@ -19,6 +19,7 @@ namespace RazorBlog
     /// Factory for creating a db context. Only used in dev mode
     /// when creating migrations.
     /// </summary>
+    [NoCoverage]
     public class DbFactory : IDesignTimeDbContextFactory<Db>
     {
         /// <summary>

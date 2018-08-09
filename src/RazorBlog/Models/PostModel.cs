@@ -24,7 +24,7 @@ namespace RazorBlog.Models
         /// <summary>
         /// The current blog service.
         /// </summary>
-        protected readonly IBlogService _blog;
+        protected readonly IBlog _blog;
 
         /// <summary>
         /// Gets/sets the newly created comment.
@@ -36,7 +36,7 @@ namespace RazorBlog.Models
         /// Default constructor.
         /// </summary>
         /// <param name="blog">The blog service</param>
-        public PostModel(IBlogService blog)
+        public PostModel(IBlog blog)
         {
             _blog = blog;
         }
@@ -51,7 +51,7 @@ namespace RazorBlog.Models
             {
                 return Page();
             }
-            await _blog.SaveComment(Comment);
+            await _blog.Api.SaveComment(Comment);
 
             return LocalRedirect($"~{_blog.Settings.BlogPrefix}{_blog.Post.Slug}");
         }        

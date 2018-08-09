@@ -36,7 +36,7 @@ public static class BlogExtensions
     /// <param name="builder">The application builder</param>
     /// <param name="blog">The blog service</param>
     /// <returns>The application builder</returns>
-    public static BlogApplication UseRazorBlog(this IApplicationBuilder builder, IBlogService blog)
+    public static BlogApplication UseRazorBlog(this IApplicationBuilder builder, IBlog blog)
     {
         return new BlogApplication(builder, blog);
     }

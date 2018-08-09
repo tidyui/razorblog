@@ -84,6 +84,14 @@ header[role="banner"] {
             color: #333;
             margin: 20px 0 0;
 
+            a {
+                color: #333;
+                
+                &:hover {
+                    text-decoration: none;
+                }
+            }
+
             small {
                 font-size: 0.8rem;
                 text-transform: uppercase;

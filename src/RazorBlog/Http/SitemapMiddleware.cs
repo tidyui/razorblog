@@ -37,7 +37,7 @@ namespace RazorBlog.Http
         /// </summary>
         /// <param name="context">The current HTTP context</param>
         /// <param name="blog">The blog service</param>
-        public virtual async Task Invoke(HttpContext context, IBlogService blog, Db db)
+        public virtual async Task Invoke(HttpContext context, IBlog blog, Db db)
         {
             var url = context.Request.Path.HasValue ? 
                 context.Request.Path.Value.ToLower() : "";

@@ -35,6 +35,11 @@ namespace RazorBlog
         public DbSet<Post> Posts { get; set; }
 
         /// <summary>
+        /// Gets/sets the setting set.
+        /// </summary>
+        public DbSet<Setting> Settings { get; set; }
+
+        /// <summary>
         /// Gets/sets the tag set.
         /// </summary>
         public DbSet<Tag> Tags { get; set; }
@@ -86,6 +91,10 @@ namespace RazorBlog
             mb.Entity<Post>().OwnsOne(p => p.Body, md => md.Property(m => m.Value).HasColumnName("Body"));
             mb.Entity<Post>().HasIndex(p => p.Slug).IsUnique();
             mb.Entity<Post>().Ignore(p => p.CommentCount);
+
+            mb.Entity<Setting>().ToTable("RazorBlog_Settings");
+            mb.Entity<Setting>().Property(s => s.Key).HasMaxLength(64).IsRequired();
+            mb.Entity<Setting>().HasIndex(s => s.Key).IsUnique();
 
             mb.Entity<Tag>().ToTable("RazorBlog_Tags");
             mb.Entity<Tag>().Property(t => t.Title).HasMaxLength(64).IsRequired();

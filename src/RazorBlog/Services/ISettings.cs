@@ -8,38 +8,38 @@
  * 
  */
 
-namespace RazorBlog
+namespace RazorBlog.Services
 {
-    public class BlogSettings
+    public interface ISettings
     {
         /// <summary>
         /// Gets/sets the main blog title.
         /// </summary>
-        public string Title { get; set; } = "RazorBlog";
+        string Title { get; set; }
 
         /// <summary>
         /// Gets/sets the main blog description.
         /// </summary>
-        public string Description { get; set; } = "Minimal & Fast Blogging for ASP.NET Core";
+        string Description { get; set; }
 
         /// <summary>
         /// Gets/sets the URL prefix for the entire blog.
         /// </summary>
-        public string BlogPrefix { get; set; } = "/";
+        string BlogPrefix { get; set; }
 
         /// <summary>
         /// Gets/sets the URL slug for the blog archive.
         /// </summary>
-        public string ArchiveSlug { get; set; } = "/blog";
+        string ArchiveSlug { get; set; }
 
         /// <summary>
         /// Gets/sets the page size for the post listing.
         /// </summary>
-        public int PageSize { get; set; } = 5;
+        int PageSize { get; set; }
 
         /// <summary>
         /// Gets/sets the currently active theme.
         /// </summary>
-        public string Theme { get; set; } = "Persona";
+        string Theme { get; set; }
     }
 }

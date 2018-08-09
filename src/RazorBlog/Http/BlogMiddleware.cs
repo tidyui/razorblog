@@ -33,8 +33,8 @@ namespace RazorBlog.Http
         /// Invokes the middleware.
         /// </summary>
         /// <param name="context">The current HTTP context</param>
-        /// <param name="service">The blog service</param>
-        public virtual async Task Invoke(HttpContext context, IBlogService service)
+        /// <param name="blog">The blog service</param>
+        public virtual async Task Invoke(HttpContext context, IBlog blog)
         {
             var url = context.Request.Path.HasValue ? 
                 context.Request.Path.Value.ToLower() : "";
@@ -42,15 +42,15 @@ namespace RazorBlog.Http
             //
             // Check if this request is for the blog startpage
             //
-            if (string.IsNullOrEmpty(url) || url == service.Settings.BlogPrefix)
+            if (string.IsNullOrEmpty(url) || url == blog.Settings.BlogPrefix)
             {
-                service.Archive = await service.GetArchive();
-                context.Request.Path = new PathString($"/Themes/{service.Settings.Theme}/Pages/_Archive");
+                blog.Archive = await blog.Api.GetArchive();
+                context.Request.Path = new PathString($"/Themes/{blog.Settings.Theme}/Pages/_Archive");
             }
             //
             // Check if this request is the for the blog archive
             //
-            else if (url.StartsWith(service.Settings.ArchiveSlug))
+            else if (url.StartsWith(blog.Settings.ArchiveSlug))
             {
                 var segments = url.Substring(1).Split('/');
 
@@ -127,8 +127,8 @@ namespace RazorBlog.Http
                             catch { }
                         }
                     }
-                    service.Archive = await service.GetArchive(page, category, tag, year, month);
-                    context.Request.Path = new PathString($"/Themes/{service.Settings.Theme}/Pages/_Archive");
+                    blog.Archive = await blog.Api.GetArchive(page, category, tag, year, month);
+                    context.Request.Path = new PathString($"/Themes/{blog.Settings.Theme}/Pages/_Archive");
                 }
             }
             //
@@ -146,12 +146,12 @@ namespace RazorBlog.Http
 
                     if (segments.Length > 2)
                         page = Convert.ToInt32(segments[2]);
-                    service.Comments = new CommentList
+                    blog.Comments = new CommentList
                     {
-                        Items = await service.GetComments(postId, page),
+                        Items = await blog.Api.GetComments(postId, page),
                         Page = page
                     };
-                    context.Request.Path = new PathString($"/Themes/{service.Settings.Theme}/Pages/_Comments");                        
+                    context.Request.Path = new PathString($"/Themes/{blog.Settings.Theme}/Pages/_Comments");                        
                 }
             }
             //
@@ -159,14 +159,14 @@ namespace RazorBlog.Http
             //
             else if (!url.StartsWith("/assets/"))
             {
-                var slug = url.Replace(service.Settings.BlogPrefix, "");
+                var slug = url.Replace(blog.Settings.BlogPrefix, "");
 
-                var post = await service.GetPost(slug);
+                var post = await blog.Api.GetPost(slug);
 
                 if (post != null)
                 {
-                    service.Post = post;
-                    context.Request.Path = new PathString($"/Themes/{service.Settings.Theme}/Pages/_Post");
+                    blog.Post = post;
+                    context.Request.Path = new PathString($"/Themes/{blog.Settings.Theme}/Pages/_Post");
                 }
             }
             await _next.Invoke(context);

@@ -20,7 +20,7 @@ namespace RazorTemplate
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public async void Configure(IApplicationBuilder app, IHostingEnvironment env, IBlogService blog)
+        public async void Configure(IApplicationBuilder app, IHostingEnvironment env, IBlog blog)
         {
             if (env.IsDevelopment())
             {
@@ -33,7 +33,7 @@ namespace RazorTemplate
                 .Run();
 
             // Seed
-            if ((await blog.GetArchive()).Items.Length == 0)
+            if ((await blog.Api.GetArchive()).Items.Length == 0)
             {
                 var post = new Post
                 {
@@ -52,7 +52,7 @@ namespace RazorTemplate
                 };
                 post.Tags.Add("Mollis Ipsum");
                 post.Tags.Add("Cras Etiam");
-                await blog.SavePost(post);
+                await blog.Api.SavePost(post);
 
                 post = new Post
                 {
@@ -71,7 +71,7 @@ namespace RazorTemplate
                 };
                 post.Tags.Add("Cras Etiam");
                 post.Tags.Add("Venenatis Ipsum");
-                await blog.SavePost(post);
+                await blog.Api.SavePost(post);
 
                 var comment = new Comment
                 {
@@ -82,7 +82,7 @@ namespace RazorTemplate
                     IsApproved = true,
                     Published = DateTime.Now
                 };
-                await blog.SaveComment(comment);
+                await blog.Api.SaveComment(comment);
             }
         }
     }
