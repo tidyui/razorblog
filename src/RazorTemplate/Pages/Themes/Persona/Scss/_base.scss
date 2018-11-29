@@ -62,7 +62,7 @@ header[role="banner"] {
         a {
             padding-left: .5rem;
             opacity: .75;
-            transition: opacity ease-in-out 0.1s;
+            transition: opacity .1s ease-in-out;
     
             img {
                 height: 20px;
@@ -70,7 +70,6 @@ header[role="banner"] {
 
             &:hover {
                 opacity: 1;
-                transition: opacity ease-in-out 0.1s;
             }
         }
     }
@@ -130,6 +129,7 @@ footer {
     border-radius: 1.5rem;
     padding: .375rem 1.5rem;
     font-size: .85rem;
+    transition: all .1s ease-in-out;
 
     &:hover {
         background: $text_primary;
