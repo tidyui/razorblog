@@ -1,13 +1,4 @@
 @page
-@using System.Globalization
-@{
-    Func<int, int?, string> MonthName = (year, month) => {
-        if (month.HasValue) {
-            return new DateTime(year, month.Value, 1) .ToString("MMMM", CultureInfo.InvariantCulture);
-        }
-        return "";
-    };    
-}
 
 <main class="container archive">
     <div class="row">
@@ -27,7 +18,7 @@
             } else if (Blog.Archive.Year.HasValue) {
                 <div class="row">
                     <div class="col blog-filter-header">
-                        <h1>Posts from @MonthName(Blog.Archive.Year.Value, Blog.Archive.Month) @Blog.Archive.Year</h1>
+                        <h1>Posts from @Blog.GetMonthName(Blog.Archive.Month) @Blog.Archive.Year</h1>
                     </div>
                 </div>        
             } else {

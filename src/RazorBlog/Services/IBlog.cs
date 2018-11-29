@@ -62,6 +62,22 @@ namespace RazorBlog.Services
         /// <param name="email">The email</param>
         /// <param name="size">The requested image size</param>
         /// <returns>The gravatar url</returns>
-        string GetGravatar(string email, int size = 60);   
+        string GetGravatar(string email, int size = 60);
+
+        /// <summary>
+        /// Gets the current month name according to the
+        /// current culture.
+        /// </summary>
+        /// <param name="date">The date</param>
+        /// <returns>The month name</returns>
+        string GetMonthName(DateTime date);
+
+        /// <summary>
+        /// Gets the current month name according to the
+        /// current culture.
+        /// </summary>
+        /// <param name="month">The month number</param>
+        /// <returns>The month name</returns>
+        string GetMonthName(int? month);
     }
 }

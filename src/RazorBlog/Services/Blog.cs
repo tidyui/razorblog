@@ -9,6 +9,7 @@
  */
 
 using System;
+using System.Globalization;
 using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
@@ -94,6 +95,30 @@ namespace RazorBlog.Services
 
                 return $"https://www.gravatar.com/avatar/{sb.ToString().ToLower()}?s={size}&d=blank";
             }
+        }
+
+        /// <summary>
+        /// Gets the current month name according to the
+        /// current culture.
+        /// </summary>
+        /// <param name="date">The date</param>
+        /// <returns>The month name</returns>
+        public string GetMonthName(DateTime date)
+        {
+            return date.ToString("MMMM", CultureInfo.InvariantCulture);
+        }
+
+        /// <summary>
+        /// Gets the current month name according to the
+        /// current culture.
+        /// </summary>
+        /// <param name="month">The month number</param>
+        /// <returns>The month name</returns>
+        public string GetMonthName(int? month)
+        {
+            if (month.HasValue)
+                return GetMonthName(new DateTime(2001, month.Value, 1));
+            return "";
         }
     }
 }
