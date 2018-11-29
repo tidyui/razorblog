@@ -334,6 +334,18 @@ namespace RazorBlog.Services
                     PostId = model.PostId
                 };
                 await _db.Comments.AddAsync(comment);
+
+                if (_memCache != null)
+                {
+                    // Since this is a new comment we need to purge
+                    // the related post from cache
+                    var postSlug = await _db.Posts
+                        .Where(p => p.Id == model.PostId)
+                        .Select(p => p.Slug)
+                        .FirstOrDefaultAsync();
+                    if (!string.IsNullOrEmpty(postSlug))
+                        _memCache.Remove(postSlug);
+                }
             }
             _mapper.Map<Comment, Comment>(model, comment);
             comment.Published = comment.Published.ToUniversalTime();
