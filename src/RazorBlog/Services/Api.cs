@@ -25,14 +25,16 @@ namespace RazorBlog.Services
         protected readonly Db _db;
         protected readonly ISettings _settings;
         protected readonly IMemoryCache _memCache;
-        protected static IMapper _mapper;
-        protected static object _mutex = new Object();
-        protected static bool _isInitialized = false;
+        private static IMapper _mapper;
+        private static object _mutex = new Object();
+        private static bool _isInitialized = false;
 
         /// <summary>
         /// Default constructor.
         /// </summary>
         /// <param name="db">The current db context</param>
+        /// <param name="settings">The current settings</param>
+        /// <param name="memCache">The optional cache</param>
         public Api(Db db, ISettings settings, IMemoryCache memCache = null)
         {
             _db = db;
@@ -84,7 +86,9 @@ namespace RazorBlog.Services
                     post.LastModified = post.LastModified.ToLocalTime();
 
                     if (post.Published.HasValue)
+                    {
                         post.Published = post.Published.Value.ToLocalTime();
+                    }
                     
                     _memCache?.Set(slug, post);
                 }
@@ -113,7 +117,9 @@ namespace RazorBlog.Services
                     .FirstOrDefaultAsync(c => c.Slug == category);
 
                 if (model.Category != null)
+                {
                     query = query.Where(p => p.CategoryId == model.Category.Id);
+                }
             }
 
             // Filter on tag
@@ -123,7 +129,9 @@ namespace RazorBlog.Services
                     .FirstOrDefaultAsync(t => t.Slug == tag);
 
                 if (model.Tag != null)
+                {
                     query = query.Where(p => p.Tags.Any(t => t.Slug == tag));
+                }
             }
             
             // Filter on period
@@ -149,9 +157,12 @@ namespace RazorBlog.Services
             // Set page count and validate requested page
             model.PageCount = Math.Max(Convert.ToInt32(Math.Ceiling((double)count / _settings.PageSize)), 1);
 
-            if (page > model.PageCount)
-                page = model.PageCount;
-            model.Page = page;
+            var currentPage = page;
+            if (currentPage > model.PageCount)
+            {
+                currentPage = model.PageCount;
+            }
+            model.Page = currentPage;
 
             // Setup pagination
             if (model.PageCount > 1)
@@ -214,10 +225,14 @@ namespace RazorBlog.Services
         public async Task<Guid> SavePost(Post model)
         {
             if (model.Id == Guid.Empty)
+            {
                 model.Id = Guid.NewGuid();
+            }
 
             if (string.IsNullOrEmpty(model.Slug))
+            {
                 model.Slug = GenerateSlug(model.Title);
+            }
 
             var post = await GetQuery(withTracking: true)
                 .FirstOrDefaultAsync(p => p.Id == model.Id);
@@ -236,7 +251,9 @@ namespace RazorBlog.Services
             if (model.Category != null)
             {
                 if (string.IsNullOrEmpty(model.Category.Slug))
+                {
                     model.Category.Slug = GenerateSlug(model.Category.Title);
+                }
 
                 var category = await _db.Categories
                     .FirstOrDefaultAsync(c => c.Slug == model.Category.Slug);
@@ -276,7 +293,9 @@ namespace RazorBlog.Services
             }
             post.LastModified = DateTime.Now.ToUniversalTime();
             if (post.Published.HasValue)
+            {
                 post.Published = post.Published.Value.ToUniversalTime();
+            }
 
             await _db.SaveChangesAsync();
 
@@ -301,7 +320,9 @@ namespace RazorBlog.Services
                 .ToArrayAsync();
 
             foreach (var comment in comments)
+            {
                 comment.Published = comment.Published.ToLocalTime();
+            }
             return comments;
         }
 
@@ -316,9 +337,13 @@ namespace RazorBlog.Services
                 model.Id = Guid.NewGuid();
 
             if (string.IsNullOrEmpty(model.AuthorName) || model.AuthorName.Length > 128)
+            {
                 throw new ArgumentException("Author name is required and has a max length of 128 characters.");
+            }
             if (string.IsNullOrEmpty(model.AuthorEmail) || model.AuthorEmail.Length > 128)
+            {
                 throw new ArgumentException("Author email is required and has a max length of 128 characters.");
+            }
 
             var comment = await _db.Comments
                 .FirstOrDefaultAsync(c => c.Id == model.Id);
@@ -344,7 +369,9 @@ namespace RazorBlog.Services
                         .Select(p => p.Slug)
                         .FirstOrDefaultAsync();
                     if (!string.IsNullOrEmpty(postSlug))
+                    {
                         _memCache.Remove(postSlug);
+                    }
                 }
             }
             _mapper.Map<Comment, Comment>(model, comment);
@@ -396,9 +423,13 @@ namespace RazorBlog.Services
 
             // Remove leading & trailing dashes
             if (slug.EndsWith("-"))
+            {
                 slug = slug.Substring(0, slug.LastIndexOf("-"));
+            }
             if (slug.StartsWith("-"))
+            {
                 slug = slug.Substring(Math.Min(slug.IndexOf("-") + 1, slug.Length));
+            }
             return slug;
         }
 
@@ -412,7 +443,9 @@ namespace RazorBlog.Services
             IQueryable<Post> query = _db.Posts;
 
             if (!withTracking)
+            {
                 query = query.AsNoTracking();
+            }
 
             return query
                 .Include(p => p.Category)

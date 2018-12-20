@@ -92,7 +92,6 @@ namespace RazorBlog.Services
                 {
                     sb.Append(hashBytes[i].ToString("X2"));
                 }
-
                 return $"https://www.gravatar.com/avatar/{sb.ToString().ToLower()}?s={size}&d=blank";
             }
         }
@@ -117,7 +116,9 @@ namespace RazorBlog.Services
         public string GetMonthName(int? month)
         {
             if (month.HasValue)
+            {
                 return GetMonthName(new DateTime(2001, month.Value, 1));
+            }
             return "";
         }
     }

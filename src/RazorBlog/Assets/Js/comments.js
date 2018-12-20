@@ -7,20 +7,26 @@
 // http://github.com/tidyui/razorblog
 //
 
-if (typeof(razorblog)  == 'undefined')
+/*global
+    razorblog
+*/
+
+if (typeof(razorblog)  == "undefined") {
     razorblog = {};
+}
 
 razorblog.comments = new function() {
-    'use strict';
+    "use strict";
 
     var self = this;
 
     // Adds a new comment
     self.add = function (comment, onSuccess, onError) {
         // Validate input
-        if (comment.PostId == '' || comment.Body == '' || comment.AuthorName == '' || comment.AuthorEmail == '') {
-            if (onError != null)
+        if (comment.PostId == "" || comment.Body == "" || comment.AuthorName == "" || comment.AuthorEmail == "") {
+            if (onError != null) {
                 onError();
+            }
         }
 
         // Create xml request
@@ -28,18 +34,20 @@ razorblog.comments = new function() {
         xmlhttp.onreadystatechange = function() {
             if (xmlhttp.readyState == XMLHttpRequest.DONE) {
                 if (xmlhttp.status == 200) {
-                    if (onSuccess != null)
+                    if (onSuccess != null) {
                         onSuccess();
+                    }
                 } else {
-                    if (onError != null)
+                    if (onError != null) {
                         onError();
+                    }
                 }
             }
         };
         
         // Call api
-        xmlhttp.open('POST', '/razorblog/api/comment', true);
-        xmlhttp.setRequestHeader('Content-Type', 'application/json');
+        xmlhttp.open("POST", "/razorblog/api/comment", true);
+        xmlhttp.setRequestHeader("Content-Type", "application/json");
         xmlhttp.send(JSON.stringify(comment));
     };
 
@@ -48,14 +56,14 @@ razorblog.comments = new function() {
         var xmlhttp = new XMLHttpRequest();
 
         xmlhttp.onreadystatechange = function() {
-            if (xmlhttp.readyState == XMLHttpRequest.DONE) {
-               if (xmlhttp.status == 200) {
+            if (xmlhttp.readyState === XMLHttpRequest.DONE) {
+               if (xmlhttp.status === 200) {
                    document.getElementById(domId).innerHTML = xmlhttp.responseText;
                }
             }
         };
     
-        xmlhttp.open('GET', '/comments/' + postId, true);
+        xmlhttp.open("GET", "/comments/" + postId, true);
         xmlhttp.send();    
     };
 
@@ -71,7 +79,7 @@ razorblog.comments = new function() {
             }
         };
     
-        xmlhttp.open('GET', '/comments/' + postId + '/' + page, true);
+        xmlhttp.open("GET", "/comments/" + postId + "/" + page, true);
         xmlhttp.send();    
     };
 
@@ -79,28 +87,28 @@ razorblog.comments = new function() {
     {
         var isValid = true;
 
-        var body = document.getElementById('Body');
-        if (body.value == '') {
+        var body = document.getElementById("Body");
+        if (body.value === "") {
             isValid = false;
-            body.classList.add('error');
+            body.classList.add("error");
         } else {
-            body.classList.remove('error');
+            body.classList.remove("error");
         }
 
-        var author = document.getElementById('AuthorName');
-        if (author.value == '') {
+        var author = document.getElementById("AuthorName");
+        if (author.value === "") {
             isValid = false;
-            author.classList.add('error');
+            author.classList.add("error");
         } else {
-            author.classList.remove('error');
+            author.classList.remove("error");
         }
 
-        var email = document.getElementById('AuthorEmail');
-        if (email.value == '') {
+        var email = document.getElementById("AuthorEmail");
+        if (email.value === "") {
             isValid = false;
-            email.classList.add('error');
+            email.classList.add("error");
         } else {
-            email.classList.remove('error');
+            email.classList.remove("error");
         }
 
         if (!isValid) {

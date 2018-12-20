@@ -20,12 +20,12 @@ namespace RazorBlog.Services
     {
         protected readonly Db _db;
 
-        protected static string _title;
-        protected static string _description;
-        protected static string _blogPrefix;
-        protected static string _archiveSlug;
-        protected static int? _pageSize;
-        protected static string _theme;
+        private static string _title;
+        private static string _description;
+        private static string _blogPrefix;
+        private static string _archiveSlug;
+        private static int? _pageSize;
+        private static string _theme;
 
         /// <summary>
         /// Gets/sets the main blog title.
@@ -34,7 +34,9 @@ namespace RazorBlog.Services
             get
             {
                 if (_title == null)
+                {
                     _title = Get<string>("RazorBlog_Title", "RazorBlog");
+                }
                 return _title;
             }
             set
@@ -52,7 +54,9 @@ namespace RazorBlog.Services
             get
             {
                 if (_description == null)
+                {
                     _description = Get<string>("RazorBlog_Description", "Minimal & Fast Blogging for ASP.NET Core");
+                }
                 return _description;
             }
             set
@@ -70,7 +74,9 @@ namespace RazorBlog.Services
             get
             {
                 if (_blogPrefix == null)
+                {
                     _blogPrefix = Get<string>("RazorBlog_BlogPrefix", "/");
+                }
                 return _blogPrefix;
             }
             set
@@ -88,7 +94,9 @@ namespace RazorBlog.Services
             get
             {
                 if (_archiveSlug == null)
+                {
                     _archiveSlug = Get<string>("RazorBlog_ArchiveSlug", "/blog");
+                }
                 return _archiveSlug;
             }
             set
@@ -106,7 +114,9 @@ namespace RazorBlog.Services
             get
             {
                 if (!_pageSize.HasValue)
+                {
                     _pageSize = Get<int>("RazorBlog_PageSize", 5);
+                }
                 return _pageSize.Value;
             }
             set
@@ -124,7 +134,9 @@ namespace RazorBlog.Services
             get
             {
                 if (_theme == null)
+                {
                     _theme = Get<string>("RazorBlog_Theme", "Persona");
+                }
                 return _theme;
             }
             set
@@ -171,7 +183,9 @@ namespace RazorBlog.Services
             }
 
             if (setting.Value != null)
+            {
                 return JsonConvert.DeserializeObject<T>(setting.Value);
+            }
             return default(T);
         }
 
