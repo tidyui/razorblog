@@ -1,5 +1,7 @@
 # RazorBlog
 
+[![CodeFactor](https://www.codefactor.io/repository/github/tidyui/razorblog/badge)](https://www.codefactor.io/repository/github/tidyui/razorblog)
+
 ## About
 
 RazorBlog is a **minimal**, **super fast** blog engine for ASP.Net Core Razor Pages `2.1.1`.
