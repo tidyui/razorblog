@@ -3,9 +3,9 @@
  *
  * This software may be modified and distributed under the terms
  * of the MIT license.  See the LICENSE file for details.
- * 
+ *
  * http://github.com/tidyui/razorblog
- * 
+ *
  */
 
 using System;
@@ -45,7 +45,7 @@ namespace RazorBlog.Http
         /// <returns>The blog application</returns>
         public BlogApplicationService WithDependencies()
         {
-            Services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
+            Services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
 
             return this;
         }
