@@ -1,11 +1,11 @@
 /*
- * Copyright (c) 2018 Håkan Edling
+ * Copyright (c) 2018-2019 Håkan Edling
  *
  * This software may be modified and distributed under the terms
  * of the MIT license.  See the LICENSE file for details.
- * 
+ *
  * http://github.com/tidyui/razorblog
- * 
+ *
  */
 
 using System;
@@ -63,7 +63,7 @@ namespace RazorBlog
                     }
                 }
             }
-        }        
+        }
 
         /// <summary>
         /// Configures and creates the database model
@@ -84,7 +84,7 @@ namespace RazorBlog
             mb.Entity<Post>().Property(p => p.Title).HasMaxLength(128).IsRequired();
             mb.Entity<Post>().Property(p => p.Slug).HasMaxLength(128).IsRequired();
             mb.Entity<Post>().Property(p => p.MetaKeywords).HasMaxLength(128);
-            mb.Entity<Post>().Property(p => p.MetaDescription).HasMaxLength(256);
+            mb.Entity<Post>().Property(p => p.MetaDescription).HasMaxLength(255);
             mb.Entity<Post>().OwnsOne(p => p.Author, md => md.Property(m => m.Name).HasColumnName("AuthorName"));
             mb.Entity<Post>().OwnsOne(p => p.Author, md => md.Property(m => m.Email).HasColumnName("AuthorEmail"));
             mb.Entity<Post>().OwnsOne(p => p.Excerpt, md => md.Property(m => m.Value).HasColumnName("Excerpt"));

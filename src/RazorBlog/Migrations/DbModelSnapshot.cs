@@ -77,7 +77,7 @@ namespace RazorBlog.Migrations
                     b.Property<DateTime>("LastModified");
 
                     b.Property<string>("MetaDescription")
-                        .HasMaxLength(256);
+                        .HasMaxLength(255);
 
                     b.Property<string>("MetaKeywords")
                         .HasMaxLength(128);

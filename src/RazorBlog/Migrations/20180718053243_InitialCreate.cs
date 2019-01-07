@@ -30,7 +30,7 @@ namespace RazorBlog.Migrations
                     Title = table.Column<string>(maxLength: 128, nullable: false),
                     Slug = table.Column<string>(maxLength: 128, nullable: false),
                     MetaKeywords = table.Column<string>(maxLength: 128, nullable: true),
-                    MetaDescription = table.Column<string>(maxLength: 256, nullable: true),
+                    MetaDescription = table.Column<string>(maxLength: 255, nullable: true),
                     Excerpt = table.Column<string>(nullable: true),
                     Body = table.Column<string>(nullable: true),
                     Published = table.Column<DateTime>(nullable: true),
