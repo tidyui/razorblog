@@ -1,11 +1,11 @@
 /*
- * Copyright (c) 2018 Håkan Edling
+ * Copyright (c) 2018-2019 Håkan Edling
  *
  * This software may be modified and distributed under the terms
  * of the MIT license.  See the LICENSE file for details.
- * 
+ *
  * http://github.com/tidyui/razorblog
- * 
+ *
  */
 
 using System;
@@ -36,8 +36,8 @@ public static class BlogExtensions
     /// <param name="builder">The application builder</param>
     /// <param name="blog">The blog service</param>
     /// <returns>The application builder</returns>
-    public static BlogApplication UseRazorBlog(this IApplicationBuilder builder, IBlog blog)
+    public static BlogApplicationBuilder UseRazorBlog(this IApplicationBuilder builder, IBlog blog)
     {
-        return new BlogApplication(builder, blog);
+        return new BlogApplicationBuilder(builder, blog);
     }
 }

@@ -1,11 +1,11 @@
 /*
- * Copyright (c) 2018 Håkan Edling
+ * Copyright (c) 2018-2019 Håkan Edling
  *
  * This software may be modified and distributed under the terms
  * of the MIT license.  See the LICENSE file for details.
- * 
+ *
  * http://github.com/tidyui/razorblog
- * 
+ *
  */
 
 using System.IO;
@@ -16,7 +16,7 @@ using RazorBlog.Services;
 
 namespace RazorBlog.Http
 {
-    public class BlogApplication
+    public class BlogApplicationBuilder
     {
         private int _fileCache = 0;
         private bool _withDependecies = false;
@@ -36,7 +36,7 @@ namespace RazorBlog.Http
         /// </summary>
         /// <param name="builder">The current application builder</param>
         /// <param name="blog">The blog service</param>
-        internal BlogApplication(IApplicationBuilder builder, IBlog blog)
+        internal BlogApplicationBuilder(IApplicationBuilder builder, IBlog blog)
         {
             Builder = builder;
             Blog = blog;
@@ -46,7 +46,7 @@ namespace RazorBlog.Http
         /// Adds all framework dependencies needed for RazorBlog.
         /// </summary>
         /// <returns>The blog application</returns>
-        public BlogApplication WithDependencies()
+        public BlogApplicationBuilder WithDependencies()
         {
             _withDependecies = true;
 
@@ -58,7 +58,7 @@ namespace RazorBlog.Http
         /// </summary>
         /// <param name="days">The days the client can cache files</param>
         /// <returns>The blog application</returns>
-        public BlogApplication WithFileCache(int days)
+        public BlogApplicationBuilder WithFileCache(int days)
         {
             _fileCache = 60 * 60 * 24 * days;
 

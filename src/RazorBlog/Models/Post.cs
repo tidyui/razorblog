@@ -1,11 +1,11 @@
 /*
- * Copyright (c) 2018 Håkan Edling
+ * Copyright (c) 2018-2019 Håkan Edling
  *
  * This software may be modified and distributed under the terms
  * of the MIT license.  See the LICENSE file for details.
- * 
+ *
  * http://github.com/tidyui/razorblog
- * 
+ *
  */
 
 using System;
@@ -49,7 +49,7 @@ namespace RazorBlog.Models
         /// <summary>
         /// Gets/sets the meta description.
         /// </summary>
-        [StringLength(256)]
+        [StringLength(255)]
         public string MetaDescription { get; set; }
 
         /// <summary>
