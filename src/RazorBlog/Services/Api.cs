@@ -359,7 +359,7 @@ namespace RazorBlog.Services
             if (comment == null)
             {
                 model.IsApproved = true;
-                model.Published = DateTime.Now.ToUniversalTime();;
+                model.Published = DateTime.Now.ToUniversalTime();
 
                 comment = new Comment
                 {
