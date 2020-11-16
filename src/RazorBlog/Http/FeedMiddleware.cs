@@ -3,9 +3,9 @@
  *
  * This software may be modified and distributed under the terms
  * of the MIT license.  See the LICENSE file for details.
- * 
+ *
  * http://github.com/tidyui/razorblog
- * 
+ *
  */
 
 using System;
@@ -42,16 +42,18 @@ namespace RazorBlog.Http
         /// <param name="blog">The blog service</param>
         public virtual async Task Invoke(HttpContext context, IBlog blog, Db db)
         {
-            var url = context.Request.Path.HasValue ? 
+            var url = context.Request.Path.HasValue ?
                 context.Request.Path.Value.ToLower() : "";
 
             if (url.StartsWith("/feed"))
             {
                 using (var xml = XmlWriter.Create(context.Response.Body, new XmlWriterSettings { Async = true, Indent = true }))
                 {
+                    var utcNow = DateTime.Now.ToUniversalTime();
+
                     var host = context.Request.Scheme + "://" + context.Request.Host;
                     var latest = await db.Posts
-                        .Where(p => p.Published <= DateTime.Now.ToUniversalTime())
+                        .Where(p => p.Published <= utcNow)
                         .MaxAsync(p => p.Published);
                     var feed = await GetWriter(xml, blog, url, host, latest);
 
@@ -62,7 +64,7 @@ namespace RazorBlog.Http
                         var posts = db.Posts
                             .Include(p => p.Category)
                             .Include(p => p.Tags)
-                            .Where(p => p.Published <= DateTime.Now.ToUniversalTime())
+                            .Where(p => p.Published <= utcNow)
                             .OrderByDescending(p => p.LastModified).ThenBy(p => p.Published);
 
                         foreach (Models.Post post in posts)
@@ -92,7 +94,7 @@ namespace RazorBlog.Http
                             item.AddContributor(new SyndicationPerson(post.Author.Name, post.Author.Email));
                             item.AddLink(new SyndicationLink(new Uri(item.Id)));
 
-                            await feed.Write(item);                            
+                            await feed.Write(item);
                         }
                     }
                 }
@@ -136,7 +138,7 @@ namespace RazorBlog.Http
                     await atom.WriteSubtitle(blog.Settings.Description);
                     await atom.WriteGenerator("RazorBlog", "https://github.com/tidyui/razorblog", "0.1");
                     await atom.WriteValue("updated", latest.Value.ToString("yyyy-MM-ddTHH:mm:ssZ"));
-            
+
                     return atom;
                 }
             }

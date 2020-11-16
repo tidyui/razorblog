@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018 Håkan Edling
+ * Copyright (c) 2018-2020 Håkan Edling
  *
  * This software may be modified and distributed under the terms
  * of the MIT license.  See the LICENSE file for details.
@@ -9,8 +9,6 @@
  */
 
 using System;
-using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using RazorBlog.Services;
@@ -45,7 +43,7 @@ namespace RazorBlog.Http
         /// <returns>The blog application</returns>
         public BlogApplicationService WithDependencies()
         {
-            Services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+            Services.AddRazorPages();
 
             return this;
         }

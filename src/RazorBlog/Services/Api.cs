@@ -3,9 +3,9 @@
  *
  * This software may be modified and distributed under the terms
  * of the MIT license.  See the LICENSE file for details.
- * 
+ *
  * http://github.com/tidyui/razorblog
- * 
+ *
  */
 
 using System;
@@ -89,7 +89,7 @@ namespace RazorBlog.Services
                     {
                         post.Published = post.Published.Value.ToLocalTime();
                     }
-                    
+
                     _memCache?.Set(slug, post);
                 }
             }
@@ -114,7 +114,9 @@ namespace RazorBlog.Services
             if (!string.IsNullOrEmpty(category))
             {
                 model.Category = await _db.Categories
-                    .FirstOrDefaultAsync(c => c.Slug == category);
+                    .AsNoTracking()
+                    .FirstOrDefaultAsync(c => c.Slug == category)
+                    .ConfigureAwait(false);
 
                 if (model.Category != null)
                 {
@@ -126,29 +128,31 @@ namespace RazorBlog.Services
             if (!string.IsNullOrEmpty(tag))
             {
                 model.Tag = await _db.Tags
-                    .FirstOrDefaultAsync(t => t.Slug == tag);
+                    .AsNoTracking()
+                    .FirstOrDefaultAsync(t => t.Slug == tag)
+                    .ConfigureAwait(false);
 
                 if (model.Tag != null)
                 {
                     query = query.Where(p => p.Tags.Any(t => t.Slug == tag));
                 }
             }
-            
+
             // Filter on period
-            var now = DateTime.Now;
-            if (year.HasValue && year.Value <= now.Year)
+            var utcNow = DateTime.Now.ToUniversalTime();
+            if (year.HasValue && year.Value <= utcNow.Year)
             {
                 model.Year = year;
                 model.Month = month;
 
-                var from = new DateTime(year.Value, month.HasValue ? month.Value : 1, 1);
+                var from = new DateTime(year.Value, month.HasValue ? month.Value : 1, 1).ToUniversalTime();
                 var to = month.HasValue ? from.AddMonths(1) : from.AddYears(1);
 
                 query = query.Where(p => p.Published >= from && p.Published < to);
             }
             else
             {
-                query = query.Where(p => p.Published <= DateTime.Now.ToUniversalTime());
+                query = query.Where(p => p.Published <= utcNow);
             }
 
             // Get total posts matching the query
@@ -243,7 +247,7 @@ namespace RazorBlog.Services
                 {
                     Id = model.Id
                 };
-                _db.Posts.Add(post);
+                await _db.Posts.AddAsync(post).ConfigureAwait(false);
             }
 
             _mapper.Map<Post, Post>(model, post);
@@ -262,8 +266,8 @@ namespace RazorBlog.Services
                 {
                     post.CategoryId = model.Category.Id = Guid.NewGuid();
                     model.Category.Slug = GenerateSlug(model.Category.Title);
-                    
-                    await _db.Categories.AddAsync(model.Category);
+
+                    await _db.Categories.AddAsync(model.Category).ConfigureAwait(false);
                 }
                 else
                 {
@@ -287,8 +291,8 @@ namespace RazorBlog.Services
                     tag.Id = Guid.NewGuid();
                     tag.PostId = post.Id;
                     tag.Slug = GenerateSlug(tag.Title);
-                    
-                    post.Tags.Add(tag);
+
+                    await _db.Tags.AddAsync(tag).ConfigureAwait(false);
                 }
             }
             post.LastModified = DateTime.Now.ToUniversalTime();
@@ -297,7 +301,7 @@ namespace RazorBlog.Services
                 post.Published = post.Published.Value.ToUniversalTime();
             }
 
-            await _db.SaveChangesAsync();
+            await _db.SaveChangesAsync().ConfigureAwait(false);
 
             _memCache?.Remove(post.Slug);
 
@@ -313,11 +317,13 @@ namespace RazorBlog.Services
         public async Task<Comment[]> GetComments(Guid postId, int page = 0)
         {
             var comments = await _db.Comments
+                .AsNoTracking()
                 .Where(c => c.PostId == postId && c.IsApproved)
                 .OrderByDescending(c => c.Published)
                 .Skip(page * _settings.PageSize)
                 .Take(_settings.PageSize)
-                .ToArrayAsync();
+                .ToArrayAsync()
+                .ConfigureAwait(false);
 
             foreach (var comment in comments)
             {
@@ -346,28 +352,32 @@ namespace RazorBlog.Services
             }
 
             var comment = await _db.Comments
-                .FirstOrDefaultAsync(c => c.Id == model.Id);
+                .AsNoTracking()
+                .FirstOrDefaultAsync(c => c.Id == model.Id)
+                .ConfigureAwait(false);
 
             if (comment == null)
             {
                 model.IsApproved = true;
-                model.Published = DateTime.Now;
+                model.Published = DateTime.Now.ToUniversalTime();;
 
                 comment = new Comment
                 {
                     Id = model.Id,
                     PostId = model.PostId
                 };
-                await _db.Comments.AddAsync(comment);
+                await _db.Comments.AddAsync(comment).ConfigureAwait(false);
 
                 if (_memCache != null)
                 {
                     // Since this is a new comment we need to purge
                     // the related post from cache
                     var postSlug = await _db.Posts
+                        .AsNoTracking()
                         .Where(p => p.Id == model.PostId)
                         .Select(p => p.Slug)
-                        .FirstOrDefaultAsync();
+                        .FirstOrDefaultAsync()
+                        .ConfigureAwait(false);
                     if (!string.IsNullOrEmpty(postSlug))
                     {
                         _memCache.Remove(postSlug);
@@ -380,7 +390,7 @@ namespace RazorBlog.Services
             // Execute hook, if available
             Hooks.Comment.OnSave?.Invoke(comment);
 
-            await _db.SaveChangesAsync();
+            await _db.SaveChangesAsync().ConfigureAwait(false);
 
             return comment.Id;
         }
@@ -390,7 +400,7 @@ namespace RazorBlog.Services
         /// </summary>
         /// <param name="str">The string</param>
         /// <returns>The slug</returns>
-        public virtual string GenerateSlug(string str) 
+        public virtual string GenerateSlug(string str)
         {
             // Trim & make lower case
             var slug = str.Trim().ToLower();
