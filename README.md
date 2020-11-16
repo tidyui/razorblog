@@ -5,14 +5,14 @@
 
 ## About
 
-RazorBlog is a **minimal**, **super fast** blog engine for ASP.Net Core Razor Pages `2.1.1`.
+RazorBlog is a **minimal**, **super fast** blog engine for ASP.NET `5.0` and Razor Pages.
 It is built using the following awesome packages:
 
-* AutoMapper `7.0.1`
-* Markdig `0.15.1`
-* Microsoft.AspNetCore.Mvc `2.1.1`
-* Microsoft.EntityFrameworkCore `2.1.1`
+* AutoMapper `10.1.1`
+* Markdig `0.22.0`
+* Microsoft.EntityFrameworkCore `5.0.0`
 * Microsoft.SyndicationFeed.ReaderWriter `1.0.2`
+* Newtonsoft.Json `12.0.3`
 
 ## Content Features
 
